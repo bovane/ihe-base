@@ -85,7 +85,7 @@ http://openehealth.org/schema/ipf-commons-core.xsd">
     </bean>
 
 </beans>
-        
+
     <!--http-conf:conduit name="*.http-conduit">
         <http-conf:client ProxyServer="localhost" ProxyServerPort="8888" ProxyServerType="HTTP" AllowChunking="false"/>
     </http-conf:conduit-->

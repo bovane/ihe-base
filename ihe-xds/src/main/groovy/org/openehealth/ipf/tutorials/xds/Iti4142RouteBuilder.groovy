@@ -23,6 +23,7 @@ import org.openehealth.ipf.commons.ihe.xds.core.responses.Response
 import org.openehealth.ipf.commons.ihe.xds.core.responses.Status
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Component
 
 import javax.activation.DataHandler
 import java.util.function.Function
@@ -41,6 +42,7 @@ import static org.openehealth.ipf.platform.camel.ihe.xds.XdsCamelValidators.iti4
  * Route builder for ITI-41 and -42.
  * @author Jens Riemschneider
  */
+@Component
 class Iti4142RouteBuilder extends RouteBuilder {
 
     private final static Logger log = LoggerFactory.getLogger(Iti4142RouteBuilder.class)

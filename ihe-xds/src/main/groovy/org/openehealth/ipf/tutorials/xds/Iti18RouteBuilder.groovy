@@ -22,6 +22,7 @@ import org.openehealth.ipf.commons.ihe.xds.core.responses.QueryResponse
 import org.openehealth.ipf.commons.ihe.xds.core.validate.ValidationMessage
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Component
 
 import static org.openehealth.ipf.commons.ihe.xds.core.requests.query.QueryType.*
 import static org.openehealth.ipf.commons.ihe.xds.core.responses.Status.SUCCESS
@@ -35,6 +36,7 @@ import java.util.function.Function
  * Route builder for ITI-18.
  * @author Jens Riemschneider
  */
+@Component
 class Iti18RouteBuilder extends RouteBuilder {
     private final static Logger log = LoggerFactory.getLogger(Iti18RouteBuilder.class)
     
@@ -57,6 +59,7 @@ class Iti18RouteBuilder extends RouteBuilder {
         errorHandler(noErrorHandler())
         
         // Entry point for Stored Query
+
         from('xds-iti18:xds-iti18'+
                 "?inInterceptors=#serverInLogger" +
                 "&inFaultInterceptors=#serverInLogger" +
