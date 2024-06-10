@@ -17,6 +17,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <ipf.version>4.8-m5</ipf.version>
+        <mockserver.version>5.15.0</mockserver.version>
         <!--        <ipf.version>3.6.5</ipf.version>-->
         <tomcat.version>9.0.83</tomcat.version>
         <jetty.version>9.4.53.v20231009</jetty.version>
@@ -29,79 +30,92 @@
         <commons.io.version>2.6</commons.io.version>
         <spring.aop.version>5.2.8.RELEASE</spring.aop.version>
     </properties>
-
+    <!--  IPF 框架依赖管理  -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.openehealth.ipf</groupId>
+                <artifactId>ipf-dependencies</artifactId>
+                <type>pom</type>
+                <scope>import</scope>
+                <version>${ipf.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <dependencies>
-    <!--   通用依赖     -->
-        <!-- https://mvnrepository.com/artifact/joda-time/joda-time -->
+        <!-- 通用依赖   -->
         <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>${joda.version}</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
+        <!--    SpringBoot Web依赖    -->
         <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>${commons.codes.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
-
-        <!-- API, java.xml.bind module -->
         <dependency>
-            <groupId>jakarta.xml.bind</groupId>
-            <artifactId>jakarta.xml.bind-api</artifactId>
-            <version>${jakarta.version}</version>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-spring-boot-starter</artifactId>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
-        <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
-            <version>${javax.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${commons.io.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aop</artifactId>
-            <version>${spring.aop.version}</version>
-        </dependency>
-
-
-
-
-        <!--  IPF 依赖      -->
-        <!-- Camel BOM -->
-        <dependency>
-            <groupId>org.openehealth.ipf</groupId>
-            <artifactId>ipf-dependencies</artifactId>
-            <version>${ipf.version}</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.openehealth.ipf.boot</groupId>
             <artifactId>ipf-xds-spring-boot-starter</artifactId>
-            <version>${ipf.version}</version>
+            <exclusions>
+                <exclusion>
+                    <!-- Not needed for our purpose -->
+                    <groupId>net.sourceforge.plantuml</groupId>
+                    <artifactId>plantuml-mit</artifactId>
+                </exclusion>
+                <exclusion>
+                    <!-- Not needed for our purpose -->
+                    <groupId>org.openehealth.ipf.commons</groupId>
+                    <artifactId>ipf-commons-ihe-fhir-r4-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <!-- Exclude unused xmlunit due to CVE reporting -->
+                    <groupId>org.xmlunit</groupId>
+                    <artifactId>xmlunit-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.openehealth.ipf.commons</groupId>
+            <artifactId>ipf-commons-ihe-xds</artifactId>
+            <classifier>tests</classifier>
+            <version>${ipf.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.openehealth.ipf.platform-camel</groupId>
             <artifactId>ipf-platform-camel-ihe-mllp</artifactId>
-            <version>${ipf.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.openehealth.ipf.platform-camel</groupId>
-            <artifactId>ipf-platform-camel-ihe-xds</artifactId>
-            <version>${ipf.version}</version>
+            <groupId>org.openehealth.ipf.commons</groupId>
+            <artifactId>ipf-commons-ihe-xua</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mock-server</groupId>
+            <artifactId>mockserver-junit-jupiter-no-dependencies</artifactId>
+            <version>${mockserver.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <!--   正式代码需要用到一些测试 jar 里面的类和方法     -->
@@ -203,6 +217,34 @@
             <scope>compile</scope>
         </dependency>
 
+
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+                <!--
+                Add build-info.properties to generated artifact
+                https://docs.spring.io/spring-boot/docs/2.1.7.RELEASE/reference/html/howto-build.html#howto-build-info
+                -->
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>build-info</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
