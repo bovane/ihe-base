@@ -68,8 +68,8 @@ http://openehealth.org/schema/ipf-commons-core.xsd">
         -->
     </bean>
 
-<!--    <bean id="mockedSender" class="org.openehealth.ipf.commons.audit.queue.RecordingAuditMessageQueue"/>-->
-    <bean id="mockedSender" class="org.openehealth.ipf.commons.audit.queue.LoggingAuditMessageQueue"/>
+    <bean id="mockedSender" class="org.openehealth.ipf.commons.audit.queue.RecordingAuditMessageQueue"/>
+<!--    <bean id="mockedSender" class="org.openehealth.ipf.commons.audit.queue.LoggingAuditMessageQueue"/>-->
 
     <bean id="logFileNamePrefix" class="java.lang.String">
 <!--        <constructor-arg value="#{systemProperties['IPF_LOG_DIR']}/[processId]/[date('yyyyMMdd-HH00')]/[sequenceId]" />-->
