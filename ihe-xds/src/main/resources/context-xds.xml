@@ -84,6 +84,7 @@ http://openehealth.org/schema/ipf-commons-core.xsd">
         <constructor-arg value="#{@logFileNamePrefix}-server-out[partialResponse ? '-partial' : ''].txt" />
     </bean>
 
+
 </beans>
 
     <!--http-conf:conduit name="*.http-conduit">

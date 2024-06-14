@@ -29,7 +29,6 @@ import org.springframework.stereotype.Component
 import java.util.function.Function
 
 import static org.openehealth.ipf.platform.camel.ihe.xds.XdsCamelValidators.iti43RequestValidator
-
 /**
  * Route builder for ITI-43.
  * @author Jens Riemschneider

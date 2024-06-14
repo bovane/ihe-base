@@ -15,10 +15,10 @@
  */
 package org.openehealth.ipf.tutorials.xds
 
-import org.apache.cxf.transport.servlet.CXFServlet
-import org.openehealth.ipf.commons.ihe.ws.server.ServletServer
-import org.openehealth.ipf.commons.ihe.ws.server.TomcatServer
-import org.springframework.core.io.ClassPathResource
+//import org.apache.cxf.transport.servlet.CXFServlet
+//import org.openehealth.ipf.commons.ihe.ws.server.ServletServer
+//import org.openehealth.ipf.commons.ihe.ws.server.TomcatServer
+//import org.springframework.core.io.ClassPathResource
 
 /**
  * Entry point for command line execution.
@@ -26,33 +26,33 @@ import org.springframework.core.io.ClassPathResource
  */
 class Server {
 
-    private static final int SYSLOG_PORT = 514
-
-    /**
-     * Standard main.
-     * @param args
-     *          used to define usage of SSL.
-     * @throws Exception
-     *          any problem that occurred.
-     */
-    static void main(String[] args) {
-        ClassPathResource contextResource = new ClassPathResource('context-xds.xml')
-
-        CXFServlet servlet = new CXFServlet()
-
-        ServletServer servletServer = new TomcatServer()
-        servletServer.contextResource = contextResource.getURI().toString()
-        servletServer.port = 9091
-        servletServer.contextPath = ''
-        servletServer.servletPath = '/*'
-        servletServer.servlet = servlet
-        servletServer.secure = args.length == 1 && args[0] == 'secure'
-        servletServer.keystoreFile = 'keystore'
-        servletServer.keystorePass = 'changeit'
-        servletServer.truststoreFile = 'keystore'
-        servletServer.truststorePass = 'changeit'
-        servletServer.start()
-
-        while (true) Thread.sleep(10000)
-    }
+//    private static final int SYSLOG_PORT = 514
+//
+//    /**
+//     * Standard main.
+//     * @param args
+//     *          used to define usage of SSL.
+//     * @throws Exception
+//     *          any problem that occurred.
+//     */
+//    static void main(String[] args) {
+//        ClassPathResource contextResource = new ClassPathResource('context-xds.xml')
+//
+//        CXFServlet servlet = new CXFServlet()
+//
+//        ServletServer servletServer = new TomcatServer()
+//        servletServer.contextResource = contextResource.getURI().toString()
+//        servletServer.port = 9091
+//        servletServer.contextPath = ''
+//        servletServer.servletPath = '/*'
+//        servletServer.servlet = servlet
+//        servletServer.secure = args.length == 1 && args[0] == 'secure'
+//        servletServer.keystoreFile = 'keystore'
+//        servletServer.keystorePass = 'changeit'
+//        servletServer.truststoreFile = 'keystore'
+//        servletServer.truststorePass = 'changeit'
+//        servletServer.start()
+//
+//        while (true) Thread.sleep(10000)
+//    }
 }

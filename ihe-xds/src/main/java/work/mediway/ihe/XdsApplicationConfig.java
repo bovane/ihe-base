@@ -4,9 +4,11 @@ package work.mediway.ihe;
  * @author bovane bovane.ch@gmial.com
  * @create 2024/6/10
  */
-import org.apache.camel.spring.SpringCamelContext;
-import org.openehealth.ipf.commons.audit.DefaultAuditContext;
-import org.openehealth.ipf.commons.audit.queue.RecordingAuditMessageQueue;
+
+import org.apache.cxf.Bus;
+import org.apache.cxf.BusFactory;
+import org.apache.cxf.bus.spring.SpringBus;
+import org.apache.cxf.ext.logging.LoggingFeature;
 import org.openehealth.ipf.commons.ihe.ws.cxf.payload.InPayloadLoggerInterceptor;
 import org.openehealth.ipf.commons.ihe.ws.cxf.payload.OutPayloadLoggerInterceptor;
 import org.openehealth.ipf.tutorials.xds.DataStore;
@@ -15,22 +17,24 @@ import org.openehealth.ipf.tutorials.xds.Iti4142RouteBuilder;
 import org.openehealth.ipf.tutorials.xds.Iti43RouteBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
 
 @Configuration
-public class XdsCamelContextConfig {
-    @Bean
-    public DefaultAuditContext auditContext(RecordingAuditMessageQueue mockedSender) {
-        DefaultAuditContext auditContext = new DefaultAuditContext();
-        auditContext.setAuditEnabled(true);
-        auditContext.setAuditSourceId("sourceId");
-        auditContext.setAuditMessageQueue(mockedSender);
-        return auditContext;
+@ImportResource({"classpath:META-INF/cxf/cxf.xml", "classpath:META-INF/cxf/cxf-servlet.xml"})
+public class XdsApplicationConfig {
+
+    @Bean(name = Bus.DEFAULT_BUS_ID)
+    SpringBus springBus() {
+        var springBus = new SpringBus();
+        var logging = new LoggingFeature();
+        logging.setLogBinary(true);
+        logging.setLogMultipart(true);
+        logging.setVerbose(true);
+        springBus.getFeatures().add(logging);
+        BusFactory.setDefaultBus(springBus);
+        return springBus;
     }
 
-    @Bean
-    public RecordingAuditMessageQueue mockedSender() {
-        return new RecordingAuditMessageQueue();
-    }
 
     @Bean
     public DataStore dataStore() {
@@ -65,8 +69,4 @@ public class XdsCamelContextConfig {
         return new OutPayloadLoggerInterceptor("/Users/bovane/Documents/hos-app/logs/server-out.txt");
     }
 
-    @Bean
-    public SpringCamelContext camelContext() {
-        return new SpringCamelContext();
-    }
 }

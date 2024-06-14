@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory
 import javax.activation.DataHandler
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
-
 /**
  * A simple store for meta data and documents.
  *
