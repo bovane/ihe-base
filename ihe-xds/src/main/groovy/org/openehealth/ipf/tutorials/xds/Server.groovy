@@ -43,7 +43,7 @@ class Server {
         ServletServer servletServer = new TomcatServer()
         servletServer.contextResource = contextResource.getURI().toString()
         servletServer.port = 9091
-        servletServer.contextPath = ''
+        servletServer.contextPath = '/services'
         servletServer.servletPath = '/*'
         servletServer.servlet = servlet
         servletServer.secure = args.length == 1 && args[0] == 'secure'

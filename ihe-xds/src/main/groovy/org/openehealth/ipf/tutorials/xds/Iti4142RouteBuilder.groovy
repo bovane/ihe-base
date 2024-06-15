@@ -77,8 +77,8 @@ class Iti4142RouteBuilder extends RouteBuilder {
                                             .withAssociations(entry.req.associations).build()} as Function)
 //            .setHeader("port", {"" + getPort()}  as Supplier)
             .setHeader("port", {"" + 9091}  as Supplier)
-            .log('Send to ITI-42 endpoint: xds-iti42://localhost:${header.port}/xds-iti42')
-            .toD('xds-iti42://localhost:${header.port}/xds-iti42')
+            .log('Send to ITI-42 endpoint: xds-iti42://localhost:${header.port}/services/xds-iti42')
+            .toD('xds-iti42://localhost:${header.port}/services/xds-iti42')
 
         // Entry point for Register Document Set
         from('xds-iti42:xds-iti42'+
