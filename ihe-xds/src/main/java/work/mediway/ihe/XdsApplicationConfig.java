@@ -35,11 +35,6 @@ public class XdsApplicationConfig {
         return springBus;
     }
 
-
-    @Bean
-    public DataStore dataStore() {
-        return new DataStore();
-    }
     @Bean
     public Iti4142RouteBuilder iti4142RouteBuilder() {
         return new Iti4142RouteBuilder();
