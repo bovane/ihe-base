@@ -19,20 +19,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class XdsCamelContextConfig {
     @Bean
-    public DefaultAuditContext auditContext(RecordingAuditMessageQueue mockedSender) {
-        DefaultAuditContext auditContext = new DefaultAuditContext();
-        auditContext.setAuditEnabled(true);
-        auditContext.setAuditSourceId("sourceId");
-        auditContext.setAuditMessageQueue(mockedSender);
-        return auditContext;
-    }
-
-    @Bean
-    public RecordingAuditMessageQueue mockedSender() {
-        return new RecordingAuditMessageQueue();
-    }
-
-    @Bean
     public DataStore dataStore() {
         return new DataStore();
     }
@@ -63,10 +49,5 @@ public class XdsCamelContextConfig {
     @Bean
     public OutPayloadLoggerInterceptor serverOutLogger() {
         return new OutPayloadLoggerInterceptor("/Users/bovane/Documents/hos-app/logs/server-out.txt");
-    }
-
-    @Bean
-    public SpringCamelContext camelContext() {
-        return new SpringCamelContext();
     }
 }
