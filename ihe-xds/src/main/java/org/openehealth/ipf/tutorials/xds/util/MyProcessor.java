@@ -1,4 +1,4 @@
-package org.openehealth.ipf.tutorials.xds;
+package org.openehealth.ipf.tutorials.xds.util;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -22,14 +22,15 @@ public class MyProcessor implements Processor {
 
     protected Logger log = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    @Qualifier("auditMessageQueue")
-    private AuditMessageQueue auditMessageQueue;
-
+//    @Autowired
+//    @Qualifier("auditMessageQueue")
+//    private AuditMessageQueue auditMessageQueue;
 
     @Override
     public void process(Exchange exchange) {
         log.warn("test processor");
+        AuditMessageQueue auditMessageQueue = (AuditMessageQueue)ApplicationContextGetBeanHelper.getBean("auditMessageQueue");
+        log.warn(auditMessageQueue.toString());
         RecordingAuditMessageQueue recordingAuditMessageQueue = (RecordingAuditMessageQueue) auditMessageQueue;
         List<AuditMessage> auditMessages = recordingAuditMessageQueue.getMessages();
         auditMessages.forEach(auditMessage -> log.warn(auditMessage.toString()));

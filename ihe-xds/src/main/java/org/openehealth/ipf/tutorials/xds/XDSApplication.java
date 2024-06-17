@@ -1,5 +1,6 @@
 package org.openehealth.ipf.tutorials.xds;
 
+import org.openehealth.ipf.tutorials.xds.util.BeanPrinter;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

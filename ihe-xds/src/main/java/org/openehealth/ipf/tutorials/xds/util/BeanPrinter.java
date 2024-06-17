@@ -1,14 +1,16 @@
-package org.openehealth.ipf.tutorials.xds;
+package org.openehealth.ipf.tutorials.xds.util;
 
 /**
  * @author bovane bovane.ch@gmial.com
  * @create 2024/6/17
  */
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class BeanPrinter {
 
     @Autowired
@@ -17,7 +19,7 @@ public class BeanPrinter {
     public void printAllBeans() {
         String[] allBeanNames = context.getBeanDefinitionNames();
         for (String beanName : allBeanNames) {
-            System.out.println(beanName);
+            log.info(beanName);
         }
     }
 }
