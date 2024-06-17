@@ -1,10 +1,10 @@
-package work.mediway.ihe.client.timer;
+package org.openehealth.ipf.tutorials.xds.client.timer;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import work.mediway.ihe.client.exec.SystemCmd;
-import work.mediway.ihe.client.ntp.NtpClient;
-import work.mediway.ihe.client.timezone.TimeZoneClient;
+import org.openehealth.ipf.tutorials.xds.client.exec.SystemCmd;
+import org.openehealth.ipf.tutorials.xds.client.ntp.NtpClient;
+import org.openehealth.ipf.tutorials.xds.client.timezone.TimeZoneClient;
 
 import javax.annotation.Resource;
 

@@ -1,4 +1,4 @@
-package work.mediway.ihe.client;
+package org.openehealth.ipf.tutorials.xds.client;
 
 /**
  * @author bovane bovane.ch@gmail.com

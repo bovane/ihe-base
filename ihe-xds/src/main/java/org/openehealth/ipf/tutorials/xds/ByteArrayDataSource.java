@@ -16,11 +16,14 @@
 
 package org.openehealth.ipf.tutorials.xds;
 
+import org.springframework.stereotype.Component;
+
 import javax.activation.DataSource;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+@Component
 public class ByteArrayDataSource implements DataSource {
 
     private final byte[] data;

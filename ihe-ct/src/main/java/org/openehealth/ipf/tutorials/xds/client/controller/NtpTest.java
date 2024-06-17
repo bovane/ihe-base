@@ -1,14 +1,14 @@
-package work.mediway.ihe.client.controller;
+package org.openehealth.ipf.tutorials.xds.client.controller;
 
 
+import org.openehealth.ipf.tutorials.xds.client.entity.ExecResult;
+import org.openehealth.ipf.tutorials.xds.client.exec.SystemCmd;
+import org.openehealth.ipf.tutorials.xds.client.ntp.NtpClient;
+import org.openehealth.ipf.tutorials.xds.client.timezone.TimeZoneClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import work.mediway.ihe.client.entity.ExecResult;
-import work.mediway.ihe.client.exec.SystemCmd;
-import work.mediway.ihe.client.ntp.NtpClient;
-import work.mediway.ihe.client.timezone.TimeZoneClient;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;

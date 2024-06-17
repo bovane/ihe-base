@@ -1,10 +1,10 @@
-package work.mediway.ihe.client.exec;
+package org.openehealth.ipf.tutorials.xds.client.exec;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.openehealth.ipf.tutorials.xds.client.entity.ExecResult;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import work.mediway.ihe.client.entity.ExecResult;
 
 import javax.annotation.PostConstruct;
 import java.io.BufferedReader;

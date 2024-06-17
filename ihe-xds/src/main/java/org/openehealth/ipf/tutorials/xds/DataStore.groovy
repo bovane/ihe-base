@@ -20,6 +20,7 @@ package org.openehealth.ipf.tutorials.xds
 import org.openehealth.ipf.commons.ihe.xds.core.metadata.Document
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Component
 
 import javax.activation.DataHandler
 import java.util.concurrent.ConcurrentHashMap
@@ -29,6 +30,7 @@ import java.util.concurrent.CopyOnWriteArrayList
  *
  * @author Jens Riemschneider
  */
+@Component
 class DataStore {
      private final static Logger log = LoggerFactory.getLogger(DataStore.class)
      

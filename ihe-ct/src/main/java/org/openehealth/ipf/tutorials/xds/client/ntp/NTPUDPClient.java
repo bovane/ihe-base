@@ -1,4 +1,4 @@
-package work.mediway.ihe.client.ntp;
+package org.openehealth.ipf.tutorials.xds.client.ntp;
 
 import org.apache.commons.net.DatagramSocketClient;
 import org.apache.commons.net.ntp.NtpV3Impl;

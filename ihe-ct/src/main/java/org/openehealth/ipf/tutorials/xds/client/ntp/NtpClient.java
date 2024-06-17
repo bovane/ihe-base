@@ -1,4 +1,4 @@
-package work.mediway.ihe.client.ntp;
+package org.openehealth.ipf.tutorials.xds.client.ntp;
 
 
 

@@ -1,4 +1,4 @@
-package work.mediway.ihe.server;
+package org.openehealth.ipf.tutorials.xds.server;
 
 /**
  * @author bovane bovane.ch@gmail.com

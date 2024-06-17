@@ -1,4 +1,4 @@
-package work.mediway.ihe.client.timezone;
+package org.openehealth.ipf.tutorials.xds.client.timezone;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;

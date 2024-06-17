@@ -17,11 +17,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <ipf.version>4.8-m5</ipf.version>
-        <!--        <ipf.version>3.6.5</ipf.version>-->
-        <camel-version>3.21.3</camel-version>
-        <groovy.version>3.0.8</groovy.version>
     </properties>
-    <!--  IPF 框架依赖管理  -->
+    <!--  IPF   -->
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -41,10 +38,21 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>jakarta.activation</groupId>
+            <artifactId>jakarta.activation-api</artifactId>
+            <version>1.2.2</version>
+        </dependency>
+
         <!--    SpringBoot Web   -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-spring-boot-starter</artifactId>
         </dependency>
 
         <dependency>
@@ -63,88 +71,6 @@
             <groupId>org.openehealth.ipf.boot</groupId>
             <artifactId>ipf-xds-spring-boot-starter</artifactId>
         </dependency>
-
-
-        <!--        <dependency>-->
-        <!--            <groupId>org.openehealth.ipf.commons</groupId>-->
-        <!--            <artifactId>ipf-commons-ihe-xds</artifactId>-->
-        <!--            <classifier>tests</classifier>-->
-        <!--            <version>${ipf.version}</version>-->
-        <!--        </dependency>-->
-
-
-        <!--        &lt;!&ndash;   some test-jar for xds     &ndash;&gt;-->
-        <!--        <dependency>-->
-        <!--            <groupId>org.openehealth.ipf.platform-camel</groupId>-->
-        <!--            <artifactId>ipf-platform-camel-ihe-xds</artifactId>-->
-        <!--            <version>${ipf.version}</version>-->
-        <!--            <type>test-jar</type>-->
-        <!--            <scope>compile</scope>-->
-        <!--        </dependency>-->
-
-        <!--        <dependency>-->
-        <!--            <groupId>org.openehealth.ipf.platform-camel</groupId>-->
-        <!--            <artifactId>ipf-platform-camel-ihe-ws</artifactId>-->
-        <!--            <version>${ipf.version}</version>-->
-        <!--            <type>test-jar</type>-->
-        <!--            <scope>compile</scope>-->
-        <!--        </dependency>-->
-
-        <!--        <dependency>-->
-        <!--            <groupId>org.openehealth.ipf.commons</groupId>-->
-        <!--            <artifactId>ipf-commons-ihe-ws</artifactId>-->
-        <!--            <version>${ipf.version}</version>-->
-        <!--            <type>test-jar</type>-->
-        <!--        </dependency>-->
-
-        <!--        &lt;!&ndash; Groovy &ndash;&gt;-->
-
-        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.codehaus.groovy/groovy &ndash;&gt;-->
-        <!--        <dependency>-->
-        <!--            <groupId>org.codehaus.groovy</groupId>-->
-        <!--            <artifactId>groovy</artifactId>-->
-        <!--            <version>${groovy.version}</version>-->
-        <!--        </dependency>-->
-
-        <!--        <dependency>-->
-        <!--            <groupId>org.apache.camel</groupId>-->
-        <!--            <artifactId>camel-groovy</artifactId>-->
-        <!--            <version>${camel-version}</version>-->
-        <!--        </dependency>-->
-
-        <!--        <dependency>-->
-        <!--            <groupId>org.apache.camel</groupId>-->
-        <!--            <artifactId>camel-spring</artifactId>-->
-        <!--            <version>${camel-version}</version>-->
-        <!--        </dependency>-->
-
-        <!--        <dependency>-->
-        <!--            <groupId>org.apache.camel</groupId>-->
-        <!--            <artifactId>camel-spring-xml</artifactId>-->
-        <!--            <version>${camel-version}</version>-->
-        <!--        </dependency>-->
-
-        <!--        &lt;!&ndash;  Dependencies for test &ndash;&gt;-->
-        <!--        <dependency>-->
-        <!--            <groupId>org.openehealth.ipf.commons</groupId>-->
-        <!--            <artifactId>ipf-commons-ihe-xds</artifactId>-->
-        <!--            <version>${ipf.version}</version>-->
-        <!--            <type>test-jar</type>-->
-        <!--            <scope>compile</scope>-->
-        <!--        </dependency>-->
-
-        <!--        <dependency>-->
-        <!--            <groupId>org.openehealth.ipf.commons</groupId>-->
-        <!--            <artifactId>ipf-commons-ihe-core</artifactId>-->
-        <!--            <version>${ipf.version}</version>-->
-        <!--            <type>test-jar</type>-->
-        <!--        </dependency>-->
-
-        <!--        <dependency>-->
-        <!--            <groupId>org.junit.jupiter</groupId>-->
-        <!--            <artifactId>junit-jupiter</artifactId>-->
-        <!--            <version>5.8.2</version>-->
-        <!--        </dependency>-->
 
     </dependencies>
     <build>

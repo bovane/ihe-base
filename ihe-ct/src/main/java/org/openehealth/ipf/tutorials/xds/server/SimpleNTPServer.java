@@ -1,5 +1,5 @@
 
-package work.mediway.ihe.server;
+package org.openehealth.ipf.tutorials.xds.server;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.net.ntp.NtpUtils;

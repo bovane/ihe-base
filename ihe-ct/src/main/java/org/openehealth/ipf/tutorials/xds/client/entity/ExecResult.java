@@ -1,4 +1,4 @@
-package work.mediway.ihe.client.entity;
+package org.openehealth.ipf.tutorials.xds.client.entity;
 
 import lombok.*;
 

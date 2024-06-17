@@ -1,4 +1,4 @@
-package work.mediway.ihe;
+package org.openehealth.ipf.tutorials.xds;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
