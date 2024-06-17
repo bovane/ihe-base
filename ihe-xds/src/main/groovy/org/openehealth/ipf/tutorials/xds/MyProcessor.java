@@ -20,17 +20,14 @@ public class MyProcessor implements Processor {
 
     protected Logger log = LoggerFactory.getLogger(getClass());
 
-    private RecordingAuditMessageQueue auditMessageQueue;
-
     @Autowired
-    public MyProcessor(RecordingAuditMessageQueue auditMessageQueue) {
-        this.auditMessageQueue = auditMessageQueue;
-    }
+    private RecordingAuditMessageQueue recordingAuditMessageQueue;
+
 
     @Override
     public void process(Exchange exchange) {
         log.warn("test processor");
-        List<AuditMessage> auditMessages = auditMessageQueue.getMessages();
+        List<AuditMessage> auditMessages = recordingAuditMessageQueue.getMessages();
         auditMessages.forEach(auditMessage -> log.warn(auditMessage.toString()));
     }
 }

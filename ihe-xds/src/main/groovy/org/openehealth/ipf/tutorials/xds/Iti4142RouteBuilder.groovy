@@ -16,7 +16,6 @@
 package org.openehealth.ipf.tutorials.xds
 
 import org.apache.camel.builder.RouteBuilder
-import org.openehealth.ipf.commons.audit.queue.RecordingAuditMessageQueue
 import org.openehealth.ipf.commons.ihe.xds.core.metadata.Association
 import org.openehealth.ipf.commons.ihe.xds.core.requests.ProvideAndRegisterDocumentSet
 import org.openehealth.ipf.commons.ihe.xds.core.requests.RegisterDocumentSet
@@ -36,9 +35,9 @@ import static org.openehealth.ipf.commons.ihe.xds.core.metadata.AvailabilityStat
 import static org.openehealth.ipf.commons.ihe.xds.core.requests.RegisterDocumentSet.supportiveBuilderWith
 import static org.openehealth.ipf.commons.ihe.xds.core.validate.ValidationMessage.*
 import static org.openehealth.ipf.platform.camel.ihe.xds.XdsCamelValidators.iti41RequestValidator
+import static org.openehealth.ipf.platform.camel.ihe.xds.XdsCamelValidators.iti42RequestValidator
 //import static org.openehealth.ipf.platform.camel.ihe.ws.StandardTestContainer.getPort
 
-import static org.openehealth.ipf.platform.camel.ihe.xds.XdsCamelValidators.iti42RequestValidator
 /**
  * Route builder for ITI-41 and -42.
  * @author Jens Riemschneider
