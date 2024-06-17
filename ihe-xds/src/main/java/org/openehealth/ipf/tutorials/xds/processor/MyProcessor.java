@@ -1,5 +1,6 @@
-package org.openehealth.ipf.tutorials.xds.util;
+package org.openehealth.ipf.tutorials.xds.processor;
 
+import cn.hutool.extra.spring.SpringUtil;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.openehealth.ipf.commons.audit.model.AuditMessage;
@@ -7,8 +8,6 @@ import org.openehealth.ipf.commons.audit.queue.AuditMessageQueue;
 import org.openehealth.ipf.commons.audit.queue.RecordingAuditMessageQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -29,7 +28,7 @@ public class MyProcessor implements Processor {
     @Override
     public void process(Exchange exchange) {
         log.warn("test processor");
-        AuditMessageQueue auditMessageQueue = (AuditMessageQueue)ApplicationContextGetBeanHelper.getBean("auditMessageQueue");
+        AuditMessageQueue auditMessageQueue = SpringUtil.getBean("auditMessageQueue");
         log.warn(auditMessageQueue.toString());
         RecordingAuditMessageQueue recordingAuditMessageQueue = (RecordingAuditMessageQueue) auditMessageQueue;
         List<AuditMessage> auditMessages = recordingAuditMessageQueue.getMessages();

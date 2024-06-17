@@ -1,0 +1,34 @@
+ipf:
+  atna:
+    audit-queue-class: org.openehealth.ipf.tutorials.xds.audit.DbRecordingAuditMessageQueue
+    auditEnabled: true
+    mock:
+      enabled: true
+      recent: 20
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,configprops,atna
+server:
+  port: 9091
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: XDS-SpringBoot
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://127.0.0.1:3306/ihe-base?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
+    username: root
+    password: 123456
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/*.xml,classpath*:/mapper/**/*.xml,classpath*:/mybatis-mapper/*Mapper.xml,classpath*:/mybatis-mapper/**/*Mapper.xml
+  #mapper-locations: classpath*:com/mediway/**/mapping/*Mapper.xml
+  configuration:
+    # 不开启驼峰的话，使用@TableField注解
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    banner: false
