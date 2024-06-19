@@ -12,6 +12,7 @@ management:
         include: health,info,configprops,atna
 server:
   port: 9091
+
 spring:
   main:
     allow-bean-definition-overriding: true
