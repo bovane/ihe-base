@@ -1,6 +1,7 @@
 package org.openehealth.ipf.tutorials.xds.client;
 
 /**
+ * 测试获取时区 TimeZone
  * @author bovane bovane.ch@gmail.com
  * @date 2024/1/4
  */

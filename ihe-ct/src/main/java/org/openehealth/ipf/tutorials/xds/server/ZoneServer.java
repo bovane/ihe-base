@@ -1,6 +1,7 @@
 package org.openehealth.ipf.tutorials.xds.server;
 
 /**
+ * 时区服务器,返回TimeZone
  * @author bovane bovane.ch@gmail.com
  * @date 2024/1/4
  */
@@ -51,6 +52,7 @@ public class ZoneServer {
         // 关闭套接字和服务器套接字
     }
     public static String getServerZone() {
+        // 保证获取的是系统时区,而不是 Java 虚拟机的时区
         synchronized (TimeZone.class) {
             TimeZone.setDefault(null);
             System.setProperty("user.timezone", "");

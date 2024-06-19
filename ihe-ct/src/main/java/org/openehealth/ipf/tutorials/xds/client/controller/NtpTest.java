@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
 /**
- * @author Scallion
+ * @author BoVane
  * @version 1.0
  * @description: TODO
  * @date 2023/6/5 10:54
@@ -34,6 +34,7 @@ public class NtpTest {
     @ResponseBody
     public String getTime() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSS");
+        // 获取本机时区
         TimeZone timeZone = systemCmd.getTimeZone();
         simpleDateFormat.setTimeZone(timeZone);
         return "时区:" + timeZone.getID() +" 时间:" +simpleDateFormat.format(ntpClient.getServerTime());
@@ -42,15 +43,17 @@ public class NtpTest {
     @GetMapping("/syncTime")
     @ResponseBody
     public ExecResult syncTime() {
+        // 设置时区
         this.syncWindowsTimezone();
+        // 设置时间
         return systemCmd.changeTime(ntpClient.getServerTime());
     }
 
     public void syncWindowsTimezone(){
         systemCmd.setWindowsTimeZone(timeZoneClient.getByBio());
     }
-    @GetMapping("/sendMessage")
-    public String sendMessage(){
+    @GetMapping("/getZone")
+    public String getTimeZone(){
         return timeZoneClient.getByBio();
     }
 }

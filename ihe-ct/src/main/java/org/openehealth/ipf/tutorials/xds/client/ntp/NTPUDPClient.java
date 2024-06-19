@@ -11,7 +11,7 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 
 /**
- * @author Scallion
+ * @author BoVane
  * @version 1.0
  * @description: TODO
  * @date 2023/6/5 14:27
@@ -29,6 +29,13 @@ public final class NTPUDPClient extends DatagramSocketClient {
         this.DEFAULT_PORT = DEFAULT_PORT;
     }
 
+    /**
+     * 获取NTP服务器时间 TimeInfo 对象
+     *
+     * @author bovane
+     * [host, port]
+     * @return org.apache.commons.net.ntp.TimeInfo
+     */
     public TimeInfo getTime(InetAddress host, int port) throws IOException {
         if (!this.isOpen()) {
             this.open();

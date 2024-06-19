@@ -3,7 +3,7 @@ package org.openehealth.ipf.tutorials.xds.client.entity;
 import lombok.*;
 
 /**
- * @author Scallion
+ * @author BoVane
  * @version 1.0
  * @description: TODO
  * @date 2023/6/5 20:15

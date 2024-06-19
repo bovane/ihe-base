@@ -12,7 +12,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 /**
- * @author Scallion
+ * @author BoVane
  * @version 1.0
  * @description: TODO
  * @date 2023/7/25 19:39
@@ -28,11 +28,13 @@ public class TimeZoneClient {
     private int timeZonePort;
     public String getByBio()  {
         String zone = null;
+        // 通过 web socket 获取 时区信息
         try (Socket socket = new Socket(timeZoneAddress, timeZonePort)) {
             BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
             output.println("request");
 
+            // 获取到返回信息
             String response = input.readLine();
             System.out.println("Server response: " + response);
             zone = response;

@@ -9,7 +9,7 @@ import org.openehealth.ipf.tutorials.xds.client.timezone.TimeZoneClient;
 import javax.annotation.Resource;
 
 /**
- * @author Scallion
+ * @author BoVane
  * @version 1.0
  * @description: TODO
  * @date 2023/7/6 13:28
