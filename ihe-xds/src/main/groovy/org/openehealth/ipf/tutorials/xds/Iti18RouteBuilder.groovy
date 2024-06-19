@@ -24,14 +24,13 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
+import java.util.function.Function
+
 import static org.openehealth.ipf.commons.ihe.xds.core.requests.query.QueryType.*
 import static org.openehealth.ipf.commons.ihe.xds.core.responses.Status.SUCCESS
 import static org.openehealth.ipf.platform.camel.ihe.xds.XdsCamelValidators.iti18RequestValidator
 import static org.openehealth.ipf.platform.camel.ihe.xds.XdsCamelValidators.iti18ResponseValidator
 import static org.openehealth.ipf.tutorials.xds.SearchResult.*
-
-import java.util.function.Function
-
 /**
  * Route builder for ITI-18.
  * @author Jens Riemschneider

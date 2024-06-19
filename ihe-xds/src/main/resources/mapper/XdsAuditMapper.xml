@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.openehealth.ipf.tutorials.xds.mapper.XdsAuditMapper">
+  <resultMap id="BaseResultMap" type="org.openehealth.ipf.tutorials.xds.entity.XdsAudit">
+    <!--@mbg.generated-->
+    <!--@Table xds_audit-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="audit_message" jdbcType="LONGVARCHAR" property="auditMessage" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, audit_message
+  </sql>
+</mapper>

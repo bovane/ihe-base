@@ -15,9 +15,9 @@
  */
 package org.openehealth.ipf.tutorials.xds
 
-import java.util.regex.Pattern
 import org.openehealth.ipf.commons.ihe.xds.core.metadata.Hl7v2Based
 
+import java.util.regex.Pattern
 /**
  * Comparators for datatypes used with XDS.
  * @author Jens Riemschneider
