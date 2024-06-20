@@ -1,4 +1,4 @@
-package org.openehealth.ipf.tutorials.xds.client;
+package org.openehealth.ipf.tutorials.xds.client.timezone;
 
 /**
  * 测试获取时区 TimeZone
@@ -12,7 +12,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class ZoneClient {
+public class ZoneClientTest {
     public static void main(String[] args) {
         String serverName = "127.0.0.1";
 //        String serverName = "192.168.0.107";

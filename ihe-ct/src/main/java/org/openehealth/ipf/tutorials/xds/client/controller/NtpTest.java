@@ -5,6 +5,7 @@ import org.openehealth.ipf.tutorials.xds.client.entity.ExecResult;
 import org.openehealth.ipf.tutorials.xds.client.exec.SystemCmd;
 import org.openehealth.ipf.tutorials.xds.client.ntp.NtpClient;
 import org.openehealth.ipf.tutorials.xds.client.timezone.TimeZoneClient;
+import org.openehealth.ipf.tutorials.xds.client.dto.ServerInfoDTO;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -32,28 +33,28 @@ public class NtpTest {
 
     @GetMapping("/getTime")
     @ResponseBody
-    public String getTime() {
+    public String getTime(ServerInfoDTO serverInfoDTO) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSS");
         // 获取本机时区
         TimeZone timeZone = systemCmd.getTimeZone();
         simpleDateFormat.setTimeZone(timeZone);
-        return "时区:" + timeZone.getID() +" 时间:" +simpleDateFormat.format(ntpClient.getServerTime());
+        return "时区:" + timeZone.getID() +" 时间:" +simpleDateFormat.format(ntpClient.getServerTime(serverInfoDTO));
     }
 
     @GetMapping("/syncTime")
     @ResponseBody
-    public ExecResult syncTime() {
+    public ExecResult syncTime(ServerInfoDTO serverInfoDTO) {
         // 设置时区
-        this.syncWindowsTimezone();
+        this.syncWindowsTimezone(serverInfoDTO);
         // 设置时间
-        return systemCmd.changeTime(ntpClient.getServerTime());
+        return systemCmd.changeTime(ntpClient.getServerTime(serverInfoDTO));
     }
 
-    public void syncWindowsTimezone(){
-        systemCmd.setWindowsTimeZone(timeZoneClient.getByBio());
+    public void syncWindowsTimezone(ServerInfoDTO serverInfoDTO){
+        systemCmd.setWindowsTimeZone(timeZoneClient.getByBio(serverInfoDTO));
     }
     @GetMapping("/getZone")
-    public String getTimeZone(){
-        return timeZoneClient.getByBio();
+    public String getTimeZone(ServerInfoDTO serverInfoDTO){
+        return timeZoneClient.getByBio(serverInfoDTO);
     }
 }

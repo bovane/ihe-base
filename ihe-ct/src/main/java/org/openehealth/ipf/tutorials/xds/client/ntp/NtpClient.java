@@ -2,8 +2,10 @@ package org.openehealth.ipf.tutorials.xds.client.ntp;
 
 
 
+import cn.hutool.core.util.StrUtil;
 import org.apache.commons.net.ntp.TimeInfo;
 import org.apache.commons.net.ntp.TimeStamp;
+import org.openehealth.ipf.tutorials.xds.client.dto.ServerInfoDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +35,10 @@ public class NtpClient {
      * @author bovane
      * @return java.util.Date
      */
-    public Date getServerTime() {
+    public Date getServerTime(ServerInfoDTO serverInfoDTO) {
+        if (StrUtil.isNotEmpty(serverInfoDTO.getNtpServer())) {
+            ntpServerAddress = serverInfoDTO.getNtpServer();
+        }
         // 设置连接信息
         NTPUDPClient ntpudpClient = new NTPUDPClient();
         ntpudpClient.setDEFAULT_PORT(ntpServerPort);

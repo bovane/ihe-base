@@ -1,7 +1,9 @@
 package org.openehealth.ipf.tutorials.xds.client.timezone;
 
+import cn.hutool.core.util.StrUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.openehealth.ipf.tutorials.xds.client.dto.ServerInfoDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +28,10 @@ public class TimeZoneClient {
     private String timeZoneAddress;
     @Value("${app.config.timeZonePort}")
     private int timeZonePort;
-    public String getByBio()  {
+    public String getByBio(ServerInfoDTO serverInfoDTO)  {
+        if (StrUtil.isNotEmpty(serverInfoDTO.getNtpServer())) {
+            timeZoneAddress = serverInfoDTO.getNtpServer();
+        }
         String zone = null;
         // 通过 web socket 获取 时区信息
         try (Socket socket = new Socket(timeZoneAddress, timeZonePort)) {
