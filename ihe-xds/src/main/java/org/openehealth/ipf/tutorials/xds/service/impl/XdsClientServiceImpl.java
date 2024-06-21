@@ -73,6 +73,7 @@ public class XdsClientServiceImpl implements XdsClientService {
         log.warn(documentEntry.getSize().toString());
         provide.getDocuments().get(0).setDocumentEntry(documentEntry);
         // 测试值是否设置进去
+        log.error("测试文档内容是否设置进去");
         log.warn(provide.getDocuments().get(0).getDocumentEntry().getEntryUuid());
         log.warn(provide.getDocuments().get(0).getDocumentEntry().getUniqueId());
         log.warn(String.valueOf(provide.getDocuments().get(0).getDocumentEntry().getSize()));
@@ -85,7 +86,7 @@ public class XdsClientServiceImpl implements XdsClientService {
         if (exception != null) {
             throw exception;
         }
-        log.error(XdsRenderingUtils.render(exchange));
+//        log.error(XdsRenderingUtils.render(exchange));
         Response response1 = exchange.getMessage().getMandatoryBody(Response.class);
         log.warn(response1.toString());
 
@@ -107,7 +108,7 @@ public class XdsClientServiceImpl implements XdsClientService {
 
         String endpointUrl = StrUtil.isNotEmpty(xdsProvidedRegisterDTO.getIti18EndpointUrl()) ? xdsProvidedRegisterDTO.getIti18EndpointUrl() : "xds-iti18://localhost:9091/services/xds-iti18";
         exchange = producerTemplate.send(endpointUrl, exchange);
-        log.error(XdsRenderingUtils.render(exchange));
+//        log.error(XdsRenderingUtils.render(exchange));
 
         if (exception != null) {
             throw exception;
@@ -118,8 +119,8 @@ public class XdsClientServiceImpl implements XdsClientService {
         log.warn(queryResponse.toString());
         log.warn(String.valueOf(queryResponse.getDocuments().size()));
         log.warn(String.valueOf(queryResponse.getDocumentEntries().size()));
-        log.warn(queryResponse.getDocumentEntries().get(0).getEntryUuid());
-        log.warn(String.valueOf(queryResponse.getDocumentEntries().get(0).getSize()));
-        log.warn(queryResponse.getDocumentEntries().get(0).getExtraMetadata().toString());
+//        log.warn(queryResponse.getDocumentEntries().get(0).getEntryUuid());
+//        log.warn(String.valueOf(queryResponse.getDocumentEntries().get(0).getSize()));
+//        log.warn(queryResponse.getDocumentEntries().get(0).getExtraMetadata().toString());
     }
 }

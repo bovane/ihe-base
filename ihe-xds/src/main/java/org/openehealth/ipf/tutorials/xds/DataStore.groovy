@@ -17,7 +17,10 @@ import com.sun.java.util.jar.pack.ConstantPool.Index;
  */
 package org.openehealth.ipf.tutorials.xds
 
+import cn.hutool.core.util.XmlUtil
+import cn.hutool.json.JSONUtil
 import org.openehealth.ipf.commons.ihe.xds.core.metadata.Document
+import org.openehealth.ipf.platform.camel.ihe.xds.core.converters.XdsRenderingUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
@@ -49,6 +52,9 @@ class DataStore {
       *          the document.
       */
      def store(Document document) {
+         log.warn("test log document")
+         log.error(document.toString())
+         XmlU.convertToXml(document,"utf-8")
          def uniqueId = document.documentEntry.uniqueId
          def contents = ContentUtils.getContent(document.getContent(DataHandler))
          documents.put(uniqueId, contents)
@@ -66,7 +72,9 @@ class DataStore {
              .each { getFromIndex(it.value, entry."$it.key").add(entry) }
          log.warn('Stored: ' + entry)
      }
-     
+
+
+
      /**
       * Retrieves a document from the store.
       * @param uniqueId

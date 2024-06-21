@@ -60,7 +60,7 @@ public class XdsApplicationConfig {
 
     @Bean
     public OutPayloadLoggerInterceptor serverOutLogger() {
-        return new OutPayloadLoggerInterceptor("/Users/bovane/Documents/hos-app/logs/server-out.txt");
+        return new OutPayloadLoggerInterceptor("/Users/bovane/Documents/hos-app/logs/server-out.text");
     }
 
 }

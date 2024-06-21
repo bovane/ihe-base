@@ -31,14 +31,14 @@ public class DbRecordingAuditMessageQueue implements AbstractMockedAuditMessageQ
     }
 
     public void audit(AuditContext auditContext, AuditMessage... auditMessages) {
-        log.error("测试自定义审计消息队列");
+//        log.error("测试自定义审计消息队列");
         List<AuditMessage> temp = Arrays.asList(auditMessages);
         this.messages.addAll(temp);
         List<XdsAudit> xdsAudits = temp.stream()
                 .map(auditMessage -> {
                     XdsAudit xdsAudit = new XdsAudit();
                     xdsAudit.setAuditMessage(auditMessage.toString());
-                    log.error(auditMessage.toString());
+//                    log.error(auditMessage.toString());
                     return xdsAudit;
                 })
                 .collect(Collectors.toList());
