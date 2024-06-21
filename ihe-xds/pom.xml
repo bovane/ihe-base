@@ -19,6 +19,8 @@
         <ipf.version>4.8-m5</ipf.version>
         <camel-version>3.21.3</camel-version>
         <groovy.version>3.0.8</groovy.version>
+        <tomcat.version>9.0.83</tomcat.version>
+        <jetty.version>9.4.53.v20231009</jetty.version>
     </properties>
     <!--  IPF 框架依赖管理  -->
     <dependencyManagement>
@@ -171,6 +173,24 @@
             <artifactId>junit-jupiter</artifactId>
             <version>5.8.2</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-io</artifactId>
+            <version>${jetty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+            <version>${jetty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-catalina</artifactId>
+            <version>${tomcat.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
 
     </dependencies>
     <build>

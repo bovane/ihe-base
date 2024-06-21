@@ -119,8 +119,8 @@ public class XdsClientServiceImpl implements XdsClientService {
         log.warn(queryResponse.toString());
         log.warn(String.valueOf(queryResponse.getDocuments().size()));
         log.warn(String.valueOf(queryResponse.getDocumentEntries().size()));
-//        log.warn(queryResponse.getDocumentEntries().get(0).getEntryUuid());
-//        log.warn(String.valueOf(queryResponse.getDocumentEntries().get(0).getSize()));
-//        log.warn(queryResponse.getDocumentEntries().get(0).getExtraMetadata().toString());
+        log.warn(queryResponse.getDocumentEntries().get(0).getEntryUuid());
+        log.warn(String.valueOf(queryResponse.getDocumentEntries().get(0).getSize()));
+        log.warn(queryResponse.getDocumentEntries().get(0).getExtraMetadata().toString());
     }
 }
