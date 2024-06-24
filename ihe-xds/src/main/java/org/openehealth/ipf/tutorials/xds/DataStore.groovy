@@ -52,7 +52,7 @@ class DataStore {
      def store(Document document) {
          log.warn("test log document")
          log.error(document.toString())
-         XmlU.convertToXml(document,"utf-8")
+//         XmlU.convertToXml(document,"utf-8")
          def uniqueId = document.documentEntry.uniqueId
          def contents = ContentUtils.getContent(document.getContent(DataHandler))
          documents.put(uniqueId, contents)
