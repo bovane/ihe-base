@@ -74,6 +74,7 @@ public class XdsClientServiceImpl implements XdsClientService {
         provide.getDocuments().get(0).setDocumentEntry(documentEntry);
         // 测试值是否设置进去
         log.error("测试文档内容是否设置进去");
+        log.warn(String.valueOf(provide.getDocuments().size()));
         log.warn(provide.getDocuments().get(0).getDocumentEntry().getEntryUuid());
         log.warn(provide.getDocuments().get(0).getDocumentEntry().getUniqueId());
         log.warn(String.valueOf(provide.getDocuments().get(0).getDocumentEntry().getSize()));

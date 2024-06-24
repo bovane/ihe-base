@@ -41,7 +41,7 @@ public class TimeZoneClient {
 
             // 获取到返回信息
             String response = input.readLine();
-            System.out.println("Server response: " + response);
+            log.warn("当前时间服务器所在时区为 " + response);
             zone = response;
         } catch (IOException e) {
             e.printStackTrace();

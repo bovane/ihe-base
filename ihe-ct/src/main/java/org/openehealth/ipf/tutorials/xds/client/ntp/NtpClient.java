@@ -3,6 +3,7 @@ package org.openehealth.ipf.tutorials.xds.client.ntp;
 
 
 import cn.hutool.core.util.StrUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.net.ntp.TimeInfo;
 import org.apache.commons.net.ntp.TimeStamp;
 import org.openehealth.ipf.tutorials.xds.client.dto.ServerInfoDTO;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.net.InetAddress;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -19,6 +21,7 @@ import java.util.Date;
  * @date 2023/6/5 10:48
  */
 @Component
+@Slf4j
 public class NtpClient {
     @Value("${app.config.ntp-server-address}")
     private String ntpServerAddress;
@@ -36,9 +39,11 @@ public class NtpClient {
      * @return java.util.Date
      */
     public Date getServerTime(ServerInfoDTO serverInfoDTO) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSS");
         if (StrUtil.isNotEmpty(serverInfoDTO.getNtpServer())) {
             ntpServerAddress = serverInfoDTO.getNtpServer();
         }
+        log.warn("当前ntpServer服务地址为: " + ntpServerAddress);
         // 设置连接信息
         NTPUDPClient ntpudpClient = new NTPUDPClient();
         ntpudpClient.setDEFAULT_PORT(ntpServerPort);
@@ -54,6 +59,7 @@ public class NtpClient {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        log.warn("当前时间服务器时间为: " + simpleDateFormat.format(date));
         return date;
     }
 }
