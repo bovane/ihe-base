@@ -2,8 +2,11 @@ package org.openehealth.ipf.tutorials.xds;
 
 import cn.hutool.core.io.FileUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.openehealth.ipf.commons.ihe.ws.cxf.NonReadingAttachmentMarshaller;
+import org.openehealth.ipf.commons.ihe.xds.core.XdsJaxbDataBinding;
 import org.openehealth.ipf.commons.ihe.xds.core.metadata.Document;
 
+import javax.activation.DataHandler;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import java.io.StringWriter;
@@ -20,9 +23,9 @@ public class XmlU {
         try {
             JAXBContext context = JAXBContext.newInstance(obj.getClass());
             Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.setProperty(Marshaller.JAXB_ENCODING, encoding);
-
+            marshaller.setAttachmentMarshaller(new NonReadingAttachmentMarshaller());
+            marshaller.setListener(new XdsJaxbDataBinding.MarshallerListener());
+            marshaller.setProperty("jaxb.formatted.output", true);
             StringWriter writer = new StringWriter();
             marshaller.marshal(obj, writer);
             result = writer.toString();
@@ -35,5 +38,6 @@ public class XmlU {
         FileUtil.appendUtf8String(result,filePath);
         FileUtil.appendUtf8String("\n",filePath);
     }
+
 
 }
