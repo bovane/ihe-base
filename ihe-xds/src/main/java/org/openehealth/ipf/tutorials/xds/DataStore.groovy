@@ -17,10 +17,8 @@ import com.sun.java.util.jar.pack.ConstantPool.Index;
  */
 package org.openehealth.ipf.tutorials.xds
 
-import cn.hutool.core.util.XmlUtil
-import cn.hutool.json.JSONUtil
+
 import org.openehealth.ipf.commons.ihe.xds.core.metadata.Document
-import org.openehealth.ipf.platform.camel.ihe.xds.core.converters.XdsRenderingUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
