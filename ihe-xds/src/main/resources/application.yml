@@ -5,6 +5,7 @@ ipf:
     mock:
       enabled: true
       recent: 20
+
 management:
   endpoints:
     web:
@@ -28,9 +29,6 @@ spring:
     username: root
     password: 123456
 
-xds:
-  file:
-    path: /Users/bovane/Documents/hos-app/logs/repository.xml
 mybatis-plus:
   mapper-locations: classpath*:/mapper/*.xml,classpath*:/mapper/**/*.xml,classpath*:/mybatis-mapper/*Mapper.xml,classpath*:/mybatis-mapper/**/*Mapper.xml
   #mapper-locations: classpath*:com/mediway/**/mapping/*Mapper.xml
