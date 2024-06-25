@@ -201,6 +201,14 @@
             <version>${ipf.version}</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.openehealth.ipf.commons/ipf-commons-core -->
+        <dependency>
+            <groupId>org.openehealth.ipf.commons</groupId>
+            <artifactId>ipf-commons-core</artifactId>
+            <version>${ipf.version}</version>
+        </dependency>
+
+
     </dependencies>
     <build>
         <plugins>

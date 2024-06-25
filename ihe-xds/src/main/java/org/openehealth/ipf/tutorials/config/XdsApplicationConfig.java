@@ -1,4 +1,4 @@
-package org.openehealth.ipf.tutorials.xds.config;
+package org.openehealth.ipf.tutorials.config;
 
 /**
  * @author bovane bovane.ch@gmial.com
@@ -11,6 +11,7 @@ import org.apache.cxf.bus.spring.SpringBus;
 import org.apache.cxf.ext.logging.LoggingFeature;
 import org.openehealth.ipf.commons.ihe.ws.cxf.payload.InPayloadLoggerInterceptor;
 import org.openehealth.ipf.commons.ihe.ws.cxf.payload.OutPayloadLoggerInterceptor;
+import org.openehealth.ipf.tutorials.pix.Iti44TestRouteBuilder;
 import org.openehealth.ipf.tutorials.xds.Iti18RouteBuilder;
 import org.openehealth.ipf.tutorials.xds.Iti4142RouteBuilder;
 import org.openehealth.ipf.tutorials.xds.Iti43RouteBuilder;
@@ -61,6 +62,11 @@ public class XdsApplicationConfig {
     @Bean
     public OutPayloadLoggerInterceptor serverOutLogger() {
         return new OutPayloadLoggerInterceptor("/Users/bovane/Documents/hos-app/logs/server-out.text");
+    }
+
+    @Bean
+    public Iti44TestRouteBuilder iti44TestRouteBuilder() {
+        return new Iti44TestRouteBuilder();
     }
 
 }
