@@ -13,10 +13,10 @@ management:
         include: health,info,configprops,atna
 server:
   port: 9091
-  ssl:
-    key-store: classpath:keystore
-    key-password: changeit
-    key-alias: tomcat
+#  ssl:
+#    key-store: classpath:keystore
+#    key-password: changeit
+#    key-alias: tomcat
 
 spring:
   main:
