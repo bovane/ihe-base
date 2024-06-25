@@ -19,8 +19,12 @@
         <ipf.version>4.8-m5</ipf.version>
         <camel-version>3.21.3</camel-version>
         <groovy.version>3.0.8</groovy.version>
+        <junit.version>5.8.2</junit.version>
         <tomcat.version>9.0.83</tomcat.version>
         <jetty.version>9.4.53.v20231009</jetty.version>
+        <druid.version>1.2.11</druid.version>
+        <mysql.version>8.0.28</mysql.version>
+        <mybatis.version>3.5.4</mybatis.version>
     </properties>
     <!--  IPF 框架依赖管理  -->
     <dependencyManagement>
@@ -46,21 +50,21 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
-            <version>1.2.11</version>
+            <version>${druid.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter -->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.5.4</version>
+            <version>${mybatis.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.28</version>
+            <version>${mysql.version}</version>
         </dependency>
 
 
@@ -81,7 +85,7 @@
         </dependency>
 
 
-        <!--    IPF     -->
+        <!--    IPF   XDS  -->
         <dependency>
             <groupId>org.openehealth.ipf.boot</groupId>
             <artifactId>ipf-atna-spring-boot-starter</artifactId>
@@ -92,7 +96,7 @@
             <artifactId>ipf-xds-spring-boot-starter</artifactId>
         </dependency>
 
-
+        <!--   some test-jar for xds     -->
         <dependency>
             <groupId>org.openehealth.ipf.commons</groupId>
             <artifactId>ipf-commons-ihe-xds</artifactId>
@@ -100,8 +104,6 @@
             <version>${ipf.version}</version>
         </dependency>
 
-
-        <!--   some test-jar for xds     -->
         <dependency>
             <groupId>org.openehealth.ipf.platform-camel</groupId>
             <artifactId>ipf-platform-camel-ihe-xds</artifactId>
@@ -171,7 +173,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.8.2</version>
+            <version>${junit.version}</version>
         </dependency>
 
         <dependency>
@@ -190,6 +192,22 @@
             <version>${tomcat.version}</version>
             <scope>compile</scope>
         </dependency>
+
+
+        <!--    PIX V3    -->
+        <dependency>
+            <groupId>org.openehealth.ipf.platform-camel</groupId>
+            <artifactId>ipf-platform-camel-ihe-hl7v3</artifactId>
+            <version>${ipf.version}</version>
+        </dependency>
+
+        <!--    PIX V2    -->
+        <dependency>
+            <groupId>org.openehealth.ipf.platform-camel</groupId>
+            <artifactId>ipf-platform-camel-ihe-mllp</artifactId>
+            <version>${ipf.version}</version>
+        </dependency>
+
 
 
     </dependencies>
