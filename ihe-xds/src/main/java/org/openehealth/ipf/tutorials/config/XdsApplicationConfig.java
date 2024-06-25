@@ -1,4 +1,4 @@
-package org.openehealth.ipf.tutorials.xds.config;
+package org.openehealth.ipf.tutorials.config;
 
 /**
  * @author bovane bovane.ch@gmial.com
