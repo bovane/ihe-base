@@ -22,7 +22,7 @@ public class PixClientController {
     private PixService pixService;
 
     @PostMapping(value = "pix-iti44", consumes = "application/json")
-    public ResponseResult pixXdsIti44(@RequestBody PixPatientFeedDTO pixPatientFeedDTO) {
+    public ResponseResult pixXdsIti44(@RequestBody PixPatientFeedDTO pixPatientFeedDTO) throws Exception {
         this.pixService.iti44PatientFeed(pixPatientFeedDTO);
         return ResponseResult.success();
     }

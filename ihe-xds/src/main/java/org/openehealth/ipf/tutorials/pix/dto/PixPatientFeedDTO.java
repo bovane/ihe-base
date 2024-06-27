@@ -8,5 +8,9 @@ import lombok.Data;
  */
 @Data
 public class PixPatientFeedDTO {
-    private String xmlVersion;
+    private String message;
+    private String host = "localhost";
+    private Integer port = 9091;
+    private String pathAndParameters = "services/xds-iti44-service1";
+    private Boolean validate = Boolean.FALSE;
 }

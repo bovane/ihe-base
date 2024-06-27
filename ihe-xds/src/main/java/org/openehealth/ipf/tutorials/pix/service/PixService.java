@@ -7,5 +7,5 @@ import org.openehealth.ipf.tutorials.pix.dto.PixPatientFeedDTO;
  * @create 2024/6/27
  */
 public interface PixService {
-    void iti44PatientFeed(PixPatientFeedDTO pixPatientFeedDTO);
+    void iti44PatientFeed(PixPatientFeedDTO pixPatientFeedDTO) throws Exception;
 }
