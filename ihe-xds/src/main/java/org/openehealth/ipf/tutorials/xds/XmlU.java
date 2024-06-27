@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.openehealth.ipf.commons.ihe.ws.cxf.NonReadingAttachmentMarshaller;
 import org.openehealth.ipf.commons.ihe.xds.core.XdsJaxbDataBinding;
 import org.openehealth.ipf.commons.ihe.xds.core.metadata.Document;
+import org.openehealth.ipf.tutorials.constant.IheConstant;
 
-import javax.activation.DataHandler;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import java.io.StringWriter;
@@ -17,7 +17,6 @@ import java.io.StringWriter;
  */
 @Slf4j
 public class XmlU {
-    private static String filePath = "/Users/bovane/Documents/hos-app/logs/repository.xml";
     public static void convertToXml(Document obj, String encoding) {
         String result = null;
         try {
@@ -32,11 +31,11 @@ public class XmlU {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        log.warn(filePath);
+        log.warn(IheConstant.REPOSITORY_FILE_PATH);
 //        log.error(result);
         // 将结果字符串写入文件
-        FileUtil.appendUtf8String(result,filePath);
-        FileUtil.appendUtf8String("\n",filePath);
+        FileUtil.appendUtf8String(result,IheConstant.REPOSITORY_FILE_PATH);
+        FileUtil.appendUtf8String("\n",IheConstant.REPOSITORY_FILE_PATH);
     }
 
 
