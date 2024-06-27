@@ -1,9 +1,6 @@
-package org.openehealth.ipf.tutorials.pix;
+package org.openehealth.ipf.tutorials.pix.util;
 
 import lombok.extern.slf4j.Slf4j;
-import org.openehealth.ipf.commons.ihe.ws.cxf.NonReadingAttachmentMarshaller;
-import org.openehealth.ipf.commons.ihe.xds.core.XdsJaxbDataBinding;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -49,6 +46,7 @@ public class PixBeanXmlUtil {
      * [messageType, is]
      * @return T
      */
+    @SuppressWarnings("unchecked")
     public static <T> T unmarshallMessage(Class<T> messageType, InputStream is) throws JAXBException {
         JAXBContext jc = JAXBContext.newInstance(messageType);
         Unmarshaller u = jc.createUnmarshaller();
