@@ -18,6 +18,7 @@ package org.openehealth.ipf.tutorials.pix
 import cn.hutool.core.io.FileUtil
 import org.apache.camel.builder.RouteBuilder
 import org.openehealth.ipf.platform.camel.ihe.hl7v3.PixPdqV3CamelValidators
+import org.openehealth.ipf.tutorials.pix.processor.Iti44Processor
 import org.springframework.stereotype.Component
 
 import java.nio.charset.StandardCharsets
@@ -28,18 +29,19 @@ import java.nio.charset.StandardCharsets
 @Component
 class Iti44TestRouteBuilder extends RouteBuilder {
 
-    private static final String ACK = FileUtil.readString('translation/pixfeed/v3/Ack.xml', StandardCharsets.UTF_8)
+//    private static final String ACK = FileUtil.readString('translation/pixfeed/v3/Ack.xml', StandardCharsets.UTF_8)
 
     @Override
     public void configure() throws Exception {
         from('pixv3-iti44:pixv3-iti44-service1')
             .process(PixPdqV3CamelValidators.iti44RequestValidator())
-            .setBody(constant(ACK))
+//            .setBody(constant(ACK))
             .process(PixPdqV3CamelValidators.iti44ResponseValidator())
 
         from('xds-iti44:xds-iti44-service1')
             .process(PixPdqV3CamelValidators.iti44RequestValidator())
-            .setBody(constant(ACK))
+            .process(new Iti44Processor())
+//            .setBody(constant(ACK))
             .process(PixPdqV3CamelValidators.iti44ResponseValidator())
 
     }

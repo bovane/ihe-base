@@ -58,7 +58,7 @@ public class PixServiceImpl implements PixService, CamelContextAware {
         if (pixPatientFeedDTO.getValidate()) {
             validator.validate(response, ITI_44_PIX.getResponseValidationProfile());
         }
-        log.warn(response);
+//        log.warn(response);
     }
 
 
