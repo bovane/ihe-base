@@ -23,6 +23,7 @@ import org.apache.camel.Processor;
 import org.openehealth.ipf.commons.ihe.ws.cxf.NonReadingAttachmentMarshaller;
 import org.openehealth.ipf.commons.ihe.xds.core.XdsJaxbDataBinding;
 import org.openehealth.ipf.commons.ihe.xds.core.requests.ProvideAndRegisterDocumentSet;
+import org.openehealth.ipf.tutorials.constant.IheConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -42,7 +43,6 @@ import org.openehealth.ipf.commons.ihe.xds.core.metadata.Document;
 @Component
 public class Iti41Processor implements Processor {
     protected Logger log = LoggerFactory.getLogger(getClass());
-	private static String filePath = "/Users/bovane/Documents/hos-app/logs/repository_document.xml";
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
@@ -56,10 +56,10 @@ public class Iti41Processor implements Processor {
 		for (Document document : documentList) {
 			documentXml = renderEbxml(document);
 			log.warn(documentXml);
-			log.warn(filePath);
+			log.warn(IheConstant.REPOSITORY_FILE_PATH);
 			// 将结果字符串写入文件
-			FileUtil.appendUtf8String(documentXml,filePath);
-			FileUtil.appendUtf8String("\n",filePath);
+			FileUtil.appendUtf8String(documentXml,IheConstant.REPOSITORY_FILE_PATH);
+			FileUtil.appendUtf8String("\n",IheConstant.REPOSITORY_FILE_PATH);
 
 		}
 	}

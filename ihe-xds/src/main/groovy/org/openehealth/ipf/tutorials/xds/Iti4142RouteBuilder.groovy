@@ -61,7 +61,7 @@ class Iti4142RouteBuilder extends RouteBuilder {
             .logExchange(log) { 'received iti41: ' + it.in.getBody(ProvideAndRegisterDocumentSet.class) }
             // Validate and convert the request
             .process(iti41RequestValidator())
-//            .process(new Iti41Processor())
+            .process(new Iti41Processor())
             .transform().exchange ({exchange ->
                 [ 'req': exchange.in.getBody(ProvideAndRegisterDocumentSet.class), 'uuidMap': [:] ]} as Function)
             // Make the dataHandlers re-readable

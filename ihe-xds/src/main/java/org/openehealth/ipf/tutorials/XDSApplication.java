@@ -1,11 +1,10 @@
-package org.openehealth.ipf.tutorials.xds;
+package org.openehealth.ipf.tutorials;
 
 import org.mybatis.spring.annotation.MapperScan;
-import org.openehealth.ipf.tutorials.xds.config.BeanPrinter;
+import org.openehealth.ipf.tutorials.config.BeanPrinter;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -18,9 +17,9 @@ public class XDSApplication {
     public static void main(String[] args) {
         SpringApplication.run(XDSApplication.class, args);
     }
-//    @Bean
-//    public CommandLineRunner run(BeanPrinter beanPrinter) {
-//        return args -> beanPrinter.printAllBeans();
-//    }
+    @Bean
+    public CommandLineRunner run(BeanPrinter beanPrinter) {
+        return args -> beanPrinter.printAllBeans();
+    }
 
 }
