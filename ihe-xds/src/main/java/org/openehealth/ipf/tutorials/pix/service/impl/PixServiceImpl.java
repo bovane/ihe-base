@@ -47,7 +47,7 @@ public class PixServiceImpl implements PixService, CamelContextAware {
 
     @Override
     public void iti44PatientFeed(PixPatientFeedDTO pixPatientFeedDTO) throws Exception {
-        pixPatientFeedDTO.setMessage(ADD_REQUEST);
+        pixPatientFeedDTO.setMessage(REVISE_REQUEST);
 
         if (pixPatientFeedDTO.getValidate()) {
             validator.validate(pixPatientFeedDTO.getMessage(), ITI_44_PIX.getRequestValidationProfile());
