@@ -34,16 +34,26 @@ public class Iti44Processor implements Processor {
         Message message = exchange.getIn();
         // 得到xml消息,这里可以根据 XML 字符串的根目录标签,来判断是注册、修改、合并的消息类型
         String xml = message.getBody().toString();
+        String rootTag = getRootTagName(xml);
+        log.error(rootTag);
         log.error(xml);
         InputStream is = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
         // PRPA_AR201301UV02 注册患者
         // PRPA_AR201302UV02 为XDS 更新文档注册库中的患者信息
         // PRPA_AR201304UV02 患者合并
+
         PRPAIN201302UV02Type prpain201302UV02Type = HL7V3Transformer.unmarshallMessage(PRPAIN201302UV02Type.class,is);
         log.warn(prpain201302UV02Type.getITSVersion());
         exchange.getOut().setBody(ACK);
     }
 
+    /**
+     * 获取XML字符串的根Tag
+     *
+     * @author bovane
+     * [xmlString]
+     * @return java.lang.String
+     */
     public static String getRootTagName(String xmlString) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

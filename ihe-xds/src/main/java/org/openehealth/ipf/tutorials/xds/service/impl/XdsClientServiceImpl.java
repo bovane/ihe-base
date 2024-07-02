@@ -56,9 +56,11 @@ public class XdsClientServiceImpl implements XdsClientService {
         // for each call
         Exchange exchange = new DefaultExchange(camelContext);
         exchange.setPattern(ExchangePattern.InOut);
+
         // generate documentEntry
         ProvideAndRegisterDocumentSet provide = SampleData.createProvideAndRegisterDocumentSet();
         DocumentEntry documentEntry = provide.getDocuments().get(0).getDocumentEntry();
+
         Identifiable patientId = documentEntry.getPatientId();
         HashMap<String, List<String>> extra = new HashMap<>();
         extra.put("urn:abc", CollUtil.newArrayList("ddd"));
@@ -78,6 +80,7 @@ public class XdsClientServiceImpl implements XdsClientService {
         log.warn(provide.getDocuments().get(0).getDocumentEntry().getEntryUuid());
         log.warn(provide.getDocuments().get(0).getDocumentEntry().getUniqueId());
         log.warn(String.valueOf(provide.getDocuments().get(0).getDocumentEntry().getSize()));
+
         // 发送请求
         exchange.getIn().setBody(provide);
         String iti41Endpoint = StrUtil.isNotEmpty(xdsProvidedRegisterDTO.getIti41EndpointUrl()) ? xdsProvidedRegisterDTO.getIti41EndpointUrl() : "xds-iti41://localhost:9091/services/xds-iti41";
