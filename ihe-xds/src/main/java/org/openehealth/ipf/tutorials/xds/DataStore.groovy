@@ -52,7 +52,7 @@ class DataStore {
      def store(Document document) {
          log.warn("test log document")
          log.error(document.toString())
-//         XmlU.convertToXml(document,"utf-8")
+         XmlU.convertToXml(document)
          def uniqueId = document.documentEntry.uniqueId
          def contents = ContentUtils.getContent(document.getContent(DataHandler))
          documents.put(uniqueId, contents)
@@ -66,6 +66,9 @@ class DataStore {
       */
      def store(entry) {
          entries.add(entry)
+         log.info("entry 是什么?")
+         log.error(entry.toString())
+         XmlU.convertToXml(entry)
          indexes.findAll { entry.metaClass.hasProperty(entry, it.key) }
              .each { getFromIndex(it.value, entry."$it.key").add(entry) }
          log.warn('Stored: ' + entry)

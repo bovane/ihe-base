@@ -37,6 +37,7 @@ import static org.openehealth.ipf.commons.ihe.xds.core.requests.RegisterDocument
 import static org.openehealth.ipf.commons.ihe.xds.core.validate.ValidationMessage.*
 import static org.openehealth.ipf.platform.camel.ihe.xds.XdsCamelValidators.iti41RequestValidator
 import static org.openehealth.ipf.platform.camel.ihe.xds.XdsCamelValidators.iti42RequestValidator
+
 //import static org.openehealth.ipf.platform.camel.ihe.ws.StandardTestContainer.getPort
 
 /**
@@ -58,10 +59,10 @@ class Iti4142RouteBuilder extends RouteBuilder {
                 "&inFaultInterceptors=#serverInLogger" +
                 "&outInterceptors=#serverOutLogger" +
                 "&outFaultInterceptors=#serverOutLogger")
+                .process(new Iti41Processor())
             .logExchange(log) { 'received iti41: ' + it.in.getBody(ProvideAndRegisterDocumentSet.class) }
             // Validate and convert the request
             .process(iti41RequestValidator())
-            .process(new Iti41Processor())
             .transform().exchange ({exchange ->
                 [ 'req': exchange.in.getBody(ProvideAndRegisterDocumentSet.class), 'uuidMap': [:] ]} as Function)
             // Make the dataHandlers re-readable

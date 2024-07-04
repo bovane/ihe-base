@@ -84,13 +84,13 @@ public class XdsClientServiceImpl implements XdsClientService {
         // 发送请求
         exchange.getIn().setBody(provide);
         String iti41Endpoint = StrUtil.isNotEmpty(xdsProvidedRegisterDTO.getIti41EndpointUrl()) ? xdsProvidedRegisterDTO.getIti41EndpointUrl() : "xds-iti41://localhost:9091/services/xds-iti41";
+        log.error(XdsRenderingUtils.render(exchange));
 
         exchange = producerTemplate.send(iti41Endpoint, exchange);
         Exception exception = Exchanges.extractException(exchange);
         if (exception != null) {
             throw exception;
         }
-//        log.error(XdsRenderingUtils.render(exchange));
         Response response1 = exchange.getMessage().getMandatoryBody(Response.class);
         log.warn(response1.toString());
 

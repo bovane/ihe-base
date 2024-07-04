@@ -17,7 +17,7 @@ import java.io.StringWriter;
  */
 @Slf4j
 public class XmlU {
-    public static void convertToXml(Document obj, String encoding) {
+    public static void convertToXml(Object obj) {
         String result = null;
         try {
             JAXBContext context = JAXBContext.newInstance(obj.getClass());
@@ -31,11 +31,11 @@ public class XmlU {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        log.warn(IheConstant.REPOSITORY_FILE_PATH);
-//        log.error(result);
+//        log.warn(IheConstant.REPOSITORY_FILE_PATH);
+        log.info(result);
         // 将结果字符串写入文件
-        FileUtil.appendUtf8String(result,IheConstant.REPOSITORY_FILE_PATH);
-        FileUtil.appendUtf8String("\n",IheConstant.REPOSITORY_FILE_PATH);
+//        FileUtil.appendUtf8String(result,IheConstant.REPOSITORY_FILE_PATH);
+//        FileUtil.appendUtf8String("\n",IheConstant.REPOSITORY_FILE_PATH);
     }
 
 
