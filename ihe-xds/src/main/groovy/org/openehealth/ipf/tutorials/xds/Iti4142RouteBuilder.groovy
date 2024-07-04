@@ -38,8 +38,6 @@ import static org.openehealth.ipf.commons.ihe.xds.core.validate.ValidationMessag
 import static org.openehealth.ipf.platform.camel.ihe.xds.XdsCamelValidators.iti41RequestValidator
 import static org.openehealth.ipf.platform.camel.ihe.xds.XdsCamelValidators.iti42RequestValidator
 
-//import static org.openehealth.ipf.platform.camel.ihe.ws.StandardTestContainer.getPort
-
 /**
  * Route builder for ITI-41 and -42.
  * @author Jens Riemschneider
