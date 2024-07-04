@@ -20,6 +20,7 @@ import org.openehealth.ipf.commons.ihe.xds.core.requests.QueryRegistry
 import org.openehealth.ipf.commons.ihe.xds.core.requests.query.QueryReturnType
 import org.openehealth.ipf.commons.ihe.xds.core.responses.QueryResponse
 import org.openehealth.ipf.commons.ihe.xds.core.validate.ValidationMessage
+import org.openehealth.ipf.tutorials.xds.processor.Iti18Processor
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
@@ -65,6 +66,7 @@ class Iti18RouteBuilder extends RouteBuilder {
                 "&outInterceptors=#serverOutLogger" +
                 "&outFaultInterceptors=#serverOutLogger")
             .logExchange(log) { 'received iti18: ' + it.in.getBody(QueryRegistry.class) }
+            .process(new Iti18Processor())
             .process(iti18RequestValidator())
             .transform().exchange({exchange ->
                 [ 'req': exchange.in.getBody(QueryRegistry.class), 'resp': new QueryResponse(SUCCESS) ]

@@ -22,6 +22,7 @@ import org.openehealth.ipf.commons.ihe.xds.core.requests.RegisterDocumentSet
 import org.openehealth.ipf.commons.ihe.xds.core.responses.Response
 import org.openehealth.ipf.commons.ihe.xds.core.responses.Status
 import org.openehealth.ipf.tutorials.xds.processor.Iti41Processor
+import org.openehealth.ipf.tutorials.xds.processor.Iti42Processor
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
@@ -57,8 +58,8 @@ class Iti4142RouteBuilder extends RouteBuilder {
                 "&inFaultInterceptors=#serverInLogger" +
                 "&outInterceptors=#serverOutLogger" +
                 "&outFaultInterceptors=#serverOutLogger")
-                .process(new Iti41Processor())
             .logExchange(log) { 'received iti41: ' + it.in.getBody(ProvideAndRegisterDocumentSet.class) }
+            .process(new Iti41Processor())
             // Validate and convert the request
             .process(iti41RequestValidator())
             .transform().exchange ({exchange ->
@@ -88,6 +89,7 @@ class Iti4142RouteBuilder extends RouteBuilder {
                 "&outInterceptors=#serverOutLogger" +
                 "&outFaultInterceptors=#serverOutLogger")
             .logExchange(log) { 'received iti42: ' + it.in.getBody(RegisterDocumentSet.class) }
+            .process(new Iti42Processor())
             // Validate and convert the request
             .process(iti42RequestValidator())
             .transform().exchange ( {exchange ->

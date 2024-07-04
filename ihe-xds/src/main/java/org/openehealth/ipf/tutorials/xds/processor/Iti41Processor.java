@@ -16,55 +16,58 @@
  */
 package org.openehealth.ipf.tutorials.xds.processor;
 
-import cn.hutool.core.io.FileUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.openehealth.ipf.commons.ihe.ws.cxf.NonReadingAttachmentMarshaller;
 import org.openehealth.ipf.commons.ihe.xds.core.XdsJaxbDataBinding;
-import org.openehealth.ipf.commons.ihe.xds.core.ebxml.ebxml30.ProvideAndRegisterDocumentSetRequestType;
+import org.openehealth.ipf.commons.ihe.xds.core.metadata.Document;
+import org.openehealth.ipf.commons.ihe.xds.core.metadata.DocumentEntry;
+import org.openehealth.ipf.commons.ihe.xds.core.metadata.Folder;
+import org.openehealth.ipf.commons.ihe.xds.core.metadata.SubmissionSet;
 import org.openehealth.ipf.commons.ihe.xds.core.requests.ProvideAndRegisterDocumentSet;
-import org.openehealth.ipf.platform.camel.ihe.xds.core.converters.EbXML30Converters;
-import org.openehealth.ipf.platform.camel.ihe.xds.core.converters.XdsRenderingUtils;
-import org.openehealth.ipf.tutorials.constant.IheConstant;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.List;
-
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.Document;
 /**
  * Processing XDS ITI-41 Provide And Register Document Set.
  *  
  * @author Tomasz Judycki
  */
 @Component
+@Slf4j
 public class Iti41Processor implements Processor {
-    protected Logger log = LoggerFactory.getLogger(getClass());
 
 	@Override
 	public void process(Exchange exchange) {
-	    
+
+		log.warn("目前请求达到ITI41,将在这里进行文档存储++++++++++++++++++++");
+
 		Message message = exchange.getIn();
-		log.warn(XdsRenderingUtils.render(exchange));
 		ProvideAndRegisterDocumentSet request = message.getBody(ProvideAndRegisterDocumentSet.class);
 
-		List<Document> documentList = request.getDocuments();
-		String documentXml;
-		for (Document document : documentList) {
-			documentXml = renderEbxml(document);
-//			log.warn(documentXml);
-//			log.warn(IheConstant.REPOSITORY_FILE_PATH);
-			// 将结果字符串写入文件
-//			FileUtil.appendUtf8String(documentXml,IheConstant.REPOSITORY_FILE_PATH);
-//			FileUtil.appendUtf8String("\n",IheConstant.REPOSITORY_FILE_PATH);
+		SubmissionSet submissionSet = request.getSubmissionSet();
+		log.info("SubmissionSet的内容是:" + renderEbxml(submissionSet));
 
-		}
+		List<Folder> folders = request.getFolders();
+		log.warn("folders的数量为:" + folders.size());
+
+		List<Document> documentList = request.getDocuments();
+		log.info("文档的数量为:" + documentList.size());
+		// 取到documentEntry
+		List<DocumentEntry> documentEntries = new ArrayList<>();
+		documentList.forEach(document -> {
+			log.warn("文档的内容是:" + document.toString());
+			DocumentEntry documentEntry = document.getDocumentEntry();
+			documentEntries.add(documentEntry);
+		});
+
 	}
 
 	/**

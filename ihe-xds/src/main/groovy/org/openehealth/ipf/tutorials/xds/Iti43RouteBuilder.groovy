@@ -22,6 +22,7 @@ import org.openehealth.ipf.commons.ihe.xds.core.requests.RetrieveDocumentSet
 import org.openehealth.ipf.commons.ihe.xds.core.responses.RetrievedDocument
 import org.openehealth.ipf.commons.ihe.xds.core.responses.RetrievedDocumentSet
 import org.openehealth.ipf.commons.ihe.xds.core.responses.Status
+import org.openehealth.ipf.tutorials.xds.processor.Iti43Processor
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
@@ -48,6 +49,7 @@ class Iti43RouteBuilder extends RouteBuilder {
                 "&outInterceptors=#serverOutLogger" +
                 "&outFaultInterceptors=#serverOutLogger")
             .logExchange(log) { 'received iti43: ' + it.in.getBody(RetrieveDocumentSet.class) }
+            .process(new Iti43Processor())
             // Validate and convert the request
     		.process(iti43RequestValidator())
     		.convertBodyTo(RetrieveDocumentSet.class)
