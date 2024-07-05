@@ -53,7 +53,7 @@ class DataStore {
          log.warn("test log document")
          log.error(document.toString())
          def data= document.getDataHandler().getInputStream();
-         log.warn(IOUtils.toString(inputStream))
+         log.warn(IOUtils.toString(data))
          XmlU.convertToXml(document)
          def uniqueId = document.documentEntry.uniqueId
          def contents = ContentUtils.getContent(document.getContent(DataHandler))

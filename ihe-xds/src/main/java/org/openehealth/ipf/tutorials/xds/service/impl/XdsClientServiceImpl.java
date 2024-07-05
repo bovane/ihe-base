@@ -291,7 +291,7 @@ public class XdsClientServiceImpl implements XdsClientService {
 
         RetrievedDocumentSet retrieveResponse = exchange.getMessage().getMandatoryBody(RetrievedDocumentSet.class);
         log.warn(providedResponse.toString());
-
+        // 查看附件中的内容
         InputStream inputStream = retrieveResponse.getDocuments().get(0).getDataHandler().getInputStream();
         String data = IOUtils.toString(inputStream);
 
