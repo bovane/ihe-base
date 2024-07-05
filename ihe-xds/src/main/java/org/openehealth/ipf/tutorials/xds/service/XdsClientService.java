@@ -9,4 +9,10 @@ import org.openehealth.ipf.tutorials.xds.dto.XdsProvidedRegisterDTO;
  */
 public interface XdsClientService {
     void iti4142ProvidedAndRegister(XdsProvidedRegisterDTO xdsProvidedRegisterDTO);
+
+    void Iti42Register(XdsProvidedRegisterDTO xdsProvidedRegisterDTO) throws Exception;
+
+    void Iti43Retrieve(XdsProvidedRegisterDTO xdsProvidedRegisterDTO);
+
+    void Iti18Query(XdsProvidedRegisterDTO xdsProvidedRegisterDTO);
 }

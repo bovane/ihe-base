@@ -27,4 +27,28 @@ public class XdsClientController {
         return ResponseResult.success();
     }
 
+    @PostMapping(value = "iti42", consumes = "application/json")
+    public ResponseResult iti42Register(@RequestBody XdsProvidedRegisterDTO xdsProvidedRegisterDTO) throws Exception {
+        this.xdsClientService.Iti42Register(xdsProvidedRegisterDTO);
+        return ResponseResult.success();
+    }
+
+
+    @PostMapping(value = "iti43", consumes = "application/json")
+    public ResponseResult iti43Retrieve(@RequestBody XdsProvidedRegisterDTO xdsProvidedRegisterDTO) {
+        this.xdsClientService.Iti43Retrieve(xdsProvidedRegisterDTO);
+        return ResponseResult.success();
+    }
+
+    @PostMapping(value = "iti18", consumes = "application/json")
+    public ResponseResult iti18Query(@RequestBody XdsProvidedRegisterDTO xdsProvidedRegisterDTO) {
+        this.xdsClientService.Iti18Query(xdsProvidedRegisterDTO);
+        return ResponseResult.success();
+    }
+
+
+
+
+
+
 }
