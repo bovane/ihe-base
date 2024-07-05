@@ -17,7 +17,7 @@ import com.sun.java.util.jar.pack.ConstantPool.Index;
  */
 package org.openehealth.ipf.tutorials.xds
 
-
+import org.apache.commons.io.IOUtils
 import org.openehealth.ipf.commons.ihe.xds.core.metadata.Document
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -52,6 +52,8 @@ class DataStore {
      def store(Document document) {
          log.warn("test log document")
          log.error(document.toString())
+         def data= document.getDataHandler().getInputStream();
+         log.warn(IOUtils.toString(inputStream))
          XmlU.convertToXml(document)
          def uniqueId = document.documentEntry.uniqueId
          def contents = ContentUtils.getContent(document.getContent(DataHandler))

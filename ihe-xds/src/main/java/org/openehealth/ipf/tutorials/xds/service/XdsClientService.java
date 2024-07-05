@@ -12,7 +12,7 @@ public interface XdsClientService {
 
     void Iti42Register(XdsProvidedRegisterDTO xdsProvidedRegisterDTO) throws Exception;
 
-    void Iti43Retrieve(XdsProvidedRegisterDTO xdsProvidedRegisterDTO);
+    void Iti43Retrieve(XdsProvidedRegisterDTO xdsProvidedRegisterDTO) throws Exception;
 
     void Iti18Query(XdsProvidedRegisterDTO xdsProvidedRegisterDTO);
 }

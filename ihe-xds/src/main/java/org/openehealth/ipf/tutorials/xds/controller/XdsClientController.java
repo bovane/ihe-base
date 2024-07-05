@@ -35,7 +35,7 @@ public class XdsClientController {
 
 
     @PostMapping(value = "iti43", consumes = "application/json")
-    public ResponseResult iti43Retrieve(@RequestBody XdsProvidedRegisterDTO xdsProvidedRegisterDTO) {
+    public ResponseResult iti43Retrieve(@RequestBody XdsProvidedRegisterDTO xdsProvidedRegisterDTO) throws Exception {
         this.xdsClientService.Iti43Retrieve(xdsProvidedRegisterDTO);
         return ResponseResult.success();
     }

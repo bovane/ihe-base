@@ -10,17 +10,18 @@ import org.apache.camel.ExchangePattern;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.support.DefaultExchange;
 import org.apache.commons.io.IOUtils;
+import org.apache.cxf.attachment.LazyDataSource;
+import org.apache.cxf.message.Attachment;
 import org.openehealth.ipf.commons.ihe.xds.core.SampleData;
 import org.openehealth.ipf.commons.ihe.xds.core.metadata.AvailabilityStatus;
 import org.openehealth.ipf.commons.ihe.xds.core.metadata.DocumentEntry;
 import org.openehealth.ipf.commons.ihe.xds.core.metadata.Identifiable;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.ProvideAndRegisterDocumentSet;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.QueryRegistry;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.RegisterDocumentSet;
+import org.openehealth.ipf.commons.ihe.xds.core.requests.*;
 import org.openehealth.ipf.commons.ihe.xds.core.requests.query.FindDocumentsQuery;
 import org.openehealth.ipf.commons.ihe.xds.core.requests.query.QueryReturnType;
 import org.openehealth.ipf.commons.ihe.xds.core.responses.QueryResponse;
 import org.openehealth.ipf.commons.ihe.xds.core.responses.Response;
+import org.openehealth.ipf.commons.ihe.xds.core.responses.RetrievedDocumentSet;
 import org.openehealth.ipf.platform.camel.core.util.Exchanges;
 import org.openehealth.ipf.platform.camel.ihe.xds.core.converters.XdsRenderingUtils;
 import org.openehealth.ipf.tutorials.xds.ContentUtils;
@@ -33,9 +34,7 @@ import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author bovane bovane.ch@gmail.com
@@ -105,25 +104,25 @@ public class XdsClientServiceImpl implements XdsClientService {
         // 发送请求
         exchange.getIn().setBody(provide);
         String iti41Endpoint = StrUtil.isNotEmpty(xdsProvidedRegisterDTO.getIti41EndpointUrl()) ? xdsProvidedRegisterDTO.getIti41EndpointUrl() : "xds-iti41://localhost:9091/services/xds-iti41";
-        log.error(XdsRenderingUtils.render(exchange));
+//        log.error(XdsRenderingUtils.render(exchange));
 
         exchange = producerTemplate.send(iti41Endpoint, exchange);
         Exception exception = Exchanges.extractException(exchange);
         if (exception != null) {
             throw exception;
         }
-        Response response1 = exchange.getMessage().getMandatoryBody(Response.class);
-        log.warn(response1.toString());
+        Response providedResponse = exchange.getMessage().getMandatoryBody(Response.class);
+        log.warn(providedResponse.toString());
 
 
         log.error("=======开始测试查询======");
 
-        // set up a query
+        // 设置查询
         FindDocumentsQuery query = new FindDocumentsQuery();
 //        query.setPatientId(patientId);
         query.setPatientId(provide.getSubmissionSet().getPatientId());
         log.info(query.getPatientId().getId());
-        // setup status
+        // 设置状态
         List<AvailabilityStatus> statuses = CollUtil.newArrayList();
         statuses.add(AvailabilityStatus.APPROVED);
         query.setStatus(statuses);
@@ -177,16 +176,16 @@ public class XdsClientServiceImpl implements XdsClientService {
 
         // 发送请求
         exchange.getIn().setBody(registerDocumentSet);
-        String iti42Endpoint = StrUtil.isNotEmpty(xdsProvidedRegisterDTO.getIti42EndpointUrl()) ? xdsProvidedRegisterDTO.getIti42EndpointUrl() : "xds-iti41://localhost:9091/services/xds-iti42";
-        log.error(XdsRenderingUtils.render(exchange));
+        String iti42Endpoint = StrUtil.isNotEmpty(xdsProvidedRegisterDTO.getIti42EndpointUrl()) ? xdsProvidedRegisterDTO.getIti42EndpointUrl() : "xds-iti42://localhost:9091/services/xds-iti42";
+//        log.error(XdsRenderingUtils.render(exchange));
 
         exchange = producerTemplate.send(iti42Endpoint, exchange);
         Exception exception = Exchanges.extractException(exchange);
         if (exception != null) {
             throw exception;
         }
-        Response response1 = exchange.getMessage().getMandatoryBody(Response.class);
-        log.warn(response1.toString());
+        Response providedResponse = exchange.getMessage().getMandatoryBody(Response.class);
+        log.warn(providedResponse.toString());
 
         // 测试查询
         FindDocumentsQuery findDocumentsQuery = new FindDocumentsQuery();
@@ -223,7 +222,87 @@ public class XdsClientServiceImpl implements XdsClientService {
     }
 
     @Override
-    public void Iti43Retrieve(XdsProvidedRegisterDTO xdsProvidedRegisterDTO) {
+    public void Iti43Retrieve(XdsProvidedRegisterDTO xdsProvidedRegisterDTO) throws Exception {
+        // for each call,设置Camel的传输方式
+        Exchange exchange = new DefaultExchange(camelContext);
+        exchange.setPattern(ExchangePattern.InOut);
+
+        // generate documentEntry,这里的SampleData只创建单文档信息
+        ProvideAndRegisterDocumentSet provide = SampleData.createProvideAndRegisterDocumentSet();
+        DocumentEntry documentEntry = provide.getDocuments().get(0).getDocumentEntry();
+
+        // 添加患者信息
+        Identifiable patientId = documentEntry.getPatientId();
+        patientId.setId(UUID.randomUUID().toString());
+        log.warn(patientId.getId());
+        // 设置文档唯一ID
+        documentEntry.setUniqueId("4.3.2.1");
+
+
+        // 计算文档的Hash 和 Size
+        // 一个Document对象是 由 DocumentEntry 对象以及一个DataHandler对象
+        // 在 Apache Camel 中, DataHandler 是一个非常重要的概念,它代表了一个通用的数据容器,
+        // 可以包含各种类型的数据,比如文件、二进制数据等。
+        // 在 Apache Camel 中, DataHandler 通常用于在消息交换过程中传输附件或二进制数据。
+        // getContent() 方法返回的是原始的数据对象,可能是 InputStream、byte[] 或其他类型
+        documentEntry.setHash(String.valueOf(ContentUtils.sha1(provide.getDocuments().get(0).getContent(DataHandler.class))));
+        documentEntry.setSize(Long.valueOf(String.valueOf(ContentUtils.size(provide.getDocuments().get(0).getContent(DataHandler.class)))));
+        log.warn(documentEntry.getSize().toString());
+
+
+        // 设置 documentEntry
+        provide.getDocuments().get(0).setDocumentEntry(documentEntry);
+
+        // 测试值是否设置进去
+        log.error("测试文档内容是否设置进去");
+        log.warn(String.valueOf(provide.getDocuments().size()));
+        log.warn(provide.getDocuments().get(0).getDocumentEntry().getEntryUuid());
+        log.warn(provide.getDocuments().get(0).getDocumentEntry().getUniqueId());
+        log.warn(String.valueOf(provide.getDocuments().get(0).getDocumentEntry().getSize()));
+
+        // 发送请求
+        exchange.getIn().setBody(provide);
+        String iti41Endpoint = StrUtil.isNotEmpty(xdsProvidedRegisterDTO.getIti41EndpointUrl()) ? xdsProvidedRegisterDTO.getIti41EndpointUrl() : "xds-iti41://localhost:9091/services/xds-iti41";
+
+        exchange = producerTemplate.send(iti41Endpoint, exchange);
+        Exception exception = Exchanges.extractException(exchange);
+        if (exception != null) {
+            throw exception;
+        }
+        Response providedResponse = exchange.getMessage().getMandatoryBody(Response.class);
+        log.warn(providedResponse.toString());
+
+
+        log.error("=======开始测试取文档======");
+        // 设置取文档的查询体
+        RetrieveDocumentSet retrieveDocumentSet = new RetrieveDocumentSet();
+        DocumentReference documentReference = new DocumentReference();
+        documentReference.setDocumentUniqueId(provide.getDocuments().get(0).getDocumentEntry().getUniqueId());
+        documentReference.setRepositoryUniqueId("something");
+        retrieveDocumentSet.getDocuments().add(documentReference);
+        retrieveDocumentSet.getDocuments().add(documentReference);
+
+        // 发送请求
+        exchange.getIn().setBody(retrieveDocumentSet);
+        String iti43Endpoint = StrUtil.isNotEmpty(xdsProvidedRegisterDTO.getIti43EndpointUrl()) ? xdsProvidedRegisterDTO.getIti43EndpointUrl() : "xds-iti43://localhost:9091/services/xds-iti43";
+//        log.error(XdsRenderingUtils.render(exchange));
+
+        exchange = producerTemplate.send(iti43Endpoint, exchange);
+
+        RetrievedDocumentSet retrieveResponse = exchange.getMessage().getMandatoryBody(RetrievedDocumentSet.class);
+        log.warn(providedResponse.toString());
+
+        InputStream inputStream = retrieveResponse.getDocuments().get(0).getDataHandler().getInputStream();
+        String data = IOUtils.toString(inputStream);
+
+        log.warn(data);
+        System.out.println(data.length());
+
+
+        DataHandler dataHandler = retrieveResponse.getDocuments().get(0).getDataHandler();
+        printDataHandler(dataHandler);
+
+
 
     }
 
