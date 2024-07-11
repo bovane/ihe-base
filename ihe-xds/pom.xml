@@ -17,6 +17,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <ipf.version>4.8-m5</ipf.version>
+<!--        <ipf.version>4.8-m5</ipf.version>-->
         <camel-version>3.21.3</camel-version>
         <groovy.version>3.0.8</groovy.version>
         <junit.version>5.8.2</junit.version>

@@ -55,11 +55,11 @@ class DataStore {
          log.warn("当前data handler里面存的文件名称是: " + document.getDataHandler().getName())
 
          def data= document.getDataHandler().getInputStream();
-         log.warn(IOUtils.toString(data))
-         XmlU.convertToXml(document)
+//         log.warn(IOUtils.toString(data))
+//         XmlU.convertToXml(document)
          def uniqueId = document.documentEntry.uniqueId
          def contents = ContentUtils.getContent(document.getContent(DataHandler))
-         log.info("文档的内容是: " + IOUtils.toString(contents))
+//         log.info("文档的内容是: " + IOUtils.toString(contents))
          documents.put(uniqueId, contents)
          log.warn("Stored document: " + uniqueId)
      }
@@ -73,7 +73,7 @@ class DataStore {
          entries.add(entry)
          log.info("entry 是什么?")
          log.error(entry.toString())
-         XmlU.convertToXml(entry)
+//         XmlU.convertToXml(entry)
          indexes.findAll { entry.metaClass.hasProperty(entry, it.key) }
              .each { getFromIndex(it.value, entry."$it.key").add(entry) }
          log.warn('Stored: ' + entry)

@@ -10,8 +10,7 @@ import org.apache.camel.ExchangePattern;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.support.DefaultExchange;
 import org.apache.commons.io.IOUtils;
-import org.apache.cxf.attachment.LazyDataSource;
-import org.apache.cxf.message.Attachment;
+import org.openehealth.ipf.commons.ihe.ws.utils.LargeDataSource;
 import org.openehealth.ipf.commons.ihe.xds.core.SampleData;
 import org.openehealth.ipf.commons.ihe.xds.core.metadata.AvailabilityStatus;
 import org.openehealth.ipf.commons.ihe.xds.core.metadata.DocumentEntry;
@@ -23,8 +22,8 @@ import org.openehealth.ipf.commons.ihe.xds.core.responses.QueryResponse;
 import org.openehealth.ipf.commons.ihe.xds.core.responses.Response;
 import org.openehealth.ipf.commons.ihe.xds.core.responses.RetrievedDocumentSet;
 import org.openehealth.ipf.platform.camel.core.util.Exchanges;
-import org.openehealth.ipf.platform.camel.ihe.xds.core.converters.XdsRenderingUtils;
 import org.openehealth.ipf.tutorials.xds.ContentUtils;
+import org.openehealth.ipf.tutorials.xds.datasource.XmlDataSource;
 import org.openehealth.ipf.tutorials.xds.dto.XdsProvidedRegisterDTO;
 import org.openehealth.ipf.tutorials.xds.service.XdsClientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,9 @@ import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author bovane bovane.ch@gmail.com
@@ -87,9 +88,13 @@ public class XdsClientServiceImpl implements XdsClientService {
         documentEntry.setHash(String.valueOf(ContentUtils.sha1(provide.getDocuments().get(0).getContent(DataHandler.class))));
         documentEntry.setSize(Long.valueOf(String.valueOf(ContentUtils.size(provide.getDocuments().get(0).getContent(DataHandler.class)))));
         log.warn(documentEntry.getSize().toString());
+        log.warn("打印data handler 中相关信息=====");
         DataHandler dataHandler = provide.getDocuments().get(0).getDataHandler();
         printDataHandler(dataHandler);
 
+        // 提供自定义的data handler 信息
+        provide.getDocuments().get(0).setDataHandler(createCoustomDataHandler());
+        printDataHandler(provide.getDocuments().get(0).getDataHandler());
 
         // 设置 documentEntry
         provide.getDocuments().get(0).setDocumentEntry(documentEntry);
@@ -344,7 +349,9 @@ public class XdsClientServiceImpl implements XdsClientService {
         } else {
             System.out.println("Unsupported data type: " + content.getClass().getName());
         }
+    }
 
-
+    static DataHandler createCoustomDataHandler() {
+        return new DataHandler(new XmlDataSource());
     }
 }
