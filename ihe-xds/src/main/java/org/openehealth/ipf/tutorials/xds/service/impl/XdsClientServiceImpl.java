@@ -85,6 +85,7 @@ public class XdsClientServiceImpl implements XdsClientService {
         // 可以包含各种类型的数据,比如文件、二进制数据等。
         // 在 Apache Camel 中, DataHandler 通常用于在消息交换过程中传输附件或二进制数据。
         // getContent() 方法返回的是原始的数据对象,可能是 InputStream、byte[] 或其他类型
+//        provide.getDocuments().get(0).setDataHandler(createCoustomDataHandler());
         documentEntry.setHash(String.valueOf(ContentUtils.sha1(provide.getDocuments().get(0).getContent(DataHandler.class))));
         documentEntry.setSize(Long.valueOf(String.valueOf(ContentUtils.size(provide.getDocuments().get(0).getContent(DataHandler.class)))));
         log.warn(documentEntry.getSize().toString());
@@ -93,8 +94,6 @@ public class XdsClientServiceImpl implements XdsClientService {
         printDataHandler(dataHandler);
 
         // 提供自定义的data handler 信息
-        provide.getDocuments().get(0).setDataHandler(createCoustomDataHandler());
-        printDataHandler(provide.getDocuments().get(0).getDataHandler());
 
         // 设置 documentEntry
         provide.getDocuments().get(0).setDocumentEntry(documentEntry);

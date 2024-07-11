@@ -26,7 +26,7 @@ public class XmlDataSource implements DataSource {
                     return -1;
                 }
                 ++idx;
-                return 65;
+                return 66;
             }
 
             @Override
