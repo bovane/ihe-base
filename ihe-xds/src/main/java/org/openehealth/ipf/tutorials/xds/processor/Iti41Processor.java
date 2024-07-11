@@ -22,11 +22,15 @@ import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.openehealth.ipf.commons.ihe.ws.cxf.NonReadingAttachmentMarshaller;
 import org.openehealth.ipf.commons.ihe.xds.core.XdsJaxbDataBinding;
+import org.openehealth.ipf.commons.ihe.xds.core.ebxml.ebxml30.EbXMLFactory30;
 import org.openehealth.ipf.commons.ihe.xds.core.metadata.Document;
 import org.openehealth.ipf.commons.ihe.xds.core.metadata.DocumentEntry;
 import org.openehealth.ipf.commons.ihe.xds.core.metadata.Folder;
 import org.openehealth.ipf.commons.ihe.xds.core.metadata.SubmissionSet;
 import org.openehealth.ipf.commons.ihe.xds.core.requests.ProvideAndRegisterDocumentSet;
+import org.openehealth.ipf.commons.ihe.xds.core.transform.requests.ProvideAndRegisterDocumentSetTransformer;
+import org.openehealth.ipf.platform.camel.ihe.xds.core.converters.EbXML30Converters;
+import org.openehealth.ipf.platform.camel.ihe.xds.core.converters.XdsRenderingUtils;
 import org.springframework.stereotype.Component;
 
 import javax.xml.bind.JAXBContext;
@@ -51,9 +55,12 @@ public class Iti41Processor implements Processor {
 
 		Message message = exchange.getIn();
 		ProvideAndRegisterDocumentSet request = message.getBody(ProvideAndRegisterDocumentSet.class);
+		// 使用Converter 将实体类转为 EB XML 实体类
+		var requestEbxml = EbXML30Converters.convert(request);
+//		var ebString = XdsRenderingUtils.renderEbxml(requestEbxml);
+		log.warn(renderEbxml(requestEbxml));
 
 		SubmissionSet submissionSet = request.getSubmissionSet();
-		log.info("SubmissionSet的内容是:" + renderEbxml(submissionSet));
 
 		List<Folder> folders = request.getFolders();
 		log.warn("folders的数量为:" + folders.size());
@@ -71,7 +78,7 @@ public class Iti41Processor implements Processor {
 	}
 
 	/**
-	 * 将实体类转为 XML
+	 * 将EB XML实体类转为 XML
 	 *
 	 * @author bovane
 	 * [ebXml]
@@ -90,5 +97,17 @@ public class Iti41Processor implements Processor {
 		} catch (JAXBException var3) {
 			throw new RuntimeException(var3);
 		}
+	}
+
+	public static String transformer(ProvideAndRegisterDocumentSet provideAndRegisterDocumentSet) {
+		String result = "";
+		ProvideAndRegisterDocumentSetTransformer provideAndRegisterDocumentSetTransformer = new ProvideAndRegisterDocumentSetTransformer(new EbXMLFactory30());
+		var ebxml = provideAndRegisterDocumentSetTransformer.toEbXML(provideAndRegisterDocumentSet);
+		ebxml.removeDocument("document01");
+		var request = ebxml.getInternal();
+		log.info("是否删除了文档 document01?");
+		result = XdsRenderingUtils.renderEbxml(request);
+		log.warn(result);
+		return result;
 	}
 }

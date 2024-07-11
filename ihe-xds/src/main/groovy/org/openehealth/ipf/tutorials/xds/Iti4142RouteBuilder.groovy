@@ -108,6 +108,7 @@ class Iti4142RouteBuilder extends RouteBuilder {
             .transform ( constant(new Response(Status.SUCCESS)) )
 
         // Deprecated documents should not be transformed any further
+        // 已弃用的文档不应该进一步转换
         from('direct:checkForAssociationToDeprecatedObject')
             .splitEntries {
                 it.req.associations.findAll { assoc ->
@@ -121,6 +122,8 @@ class Iti4142RouteBuilder extends RouteBuilder {
         // All entries in the request must have the same patient ID, no matter if
         // they are only referenced or contained in the request itself. Also check
         // for a patient ID that we shouldn't store documents for.
+        // 请求中的所有条目必须具有相同的患者 ID,无论它们是仅被引用还是包含在请求本身中。
+        // 同时也要检查我们不应该为之存储文档的患者 ID。
         from('direct:checkPatientIds')
             .choice().when().body({ body -> body.req.submissionSet.patientId.id == '1111111' } as Function)
                 .fail(UNKNOWN_PATIENT_ID)
@@ -134,6 +137,7 @@ class Iti4142RouteBuilder extends RouteBuilder {
             .fail(FOLDER_PATIENT_ID_WRONG)
 
         // Document submissions that specify a size and hash must have correct values
+        // 指定大小和哈希的文档提交必须具有正确的值
         from('direct:checkHashAndSize')
             .splitEntries { it.req.documents }
             .choice()
@@ -150,6 +154,7 @@ class Iti4142RouteBuilder extends RouteBuilder {
             .end()
 
         // Resubmitted documents must have the same hash code as the version already in the store
+        // 重新提交的文档必须具有与已存储版本相同的哈希码
         from('direct:checkHash')
             .splitEntries { it.req.documentEntries }
             .search(SearchResult.DOC_ENTRY).uniqueId('entry.uniqueId').withoutHash('entry.hash').into('docsWithOtherHash')
@@ -157,6 +162,7 @@ class Iti4142RouteBuilder extends RouteBuilder {
             .fail(DIFFERENT_HASH_CODE_IN_RESUBMISSION)
 
         // Make documents re-readable, otherwise we loose the content of the stream after the first read
+        // 使文档可重复读取,否则我们将在第一次读取后丢失流的内容
         from('direct:makeDocsReReadable')
             .splitEntries { it.req.documents }
             .processBody {
@@ -167,11 +173,13 @@ class Iti4142RouteBuilder extends RouteBuilder {
             }
 
         // Put all documents in the store
+        // 将所有文档放入存储
         from('direct:storeDocs')
             .splitEntries { it.req.documents }
             .store()
 
         // calculate hash + size
+        // 计算哈希 + 大小
         from('direct:updateDocEntriesFromProvide')
             .splitEntries { it.req.documents }
             // Calculate some additional meta data values
@@ -179,28 +187,33 @@ class Iti4142RouteBuilder extends RouteBuilder {
             .processBody { it.entry = it.entry.documentEntry }
 
         // Put all document entries in the store
+        // 将所有文档条目放入存储
         from('direct:storeDocEntriesFromRegister')
             .splitEntries { it.req.documentEntries }
             .to('direct:store')
 
         // Put all folders in the store
+        // 将所有文件夹放入存储
         from('direct:storeFolders')
             .splitEntries { it.req.folders }
             .updateTimeStamp()
             .to('direct:store')
 
         // Put the submission set in the store
+        // 将提交集放入存储
         from('direct:storeSubmissionSet')
             .processBody { it.entry = it.req.submissionSet }
             .to('direct:store')
 
         // Finalizes the new entry and stores it
+        // 完成新条目的存储
         from('direct:store')
             .status(APPROVED)
             .assignUuid()
             .store()
 
         // Put all associations in the store
+        // 存储所有的 associations
         from('direct:storeAssociations')
             .splitEntries { it.req.associations }
             .assignUuid()
@@ -210,6 +223,7 @@ class Iti4142RouteBuilder extends RouteBuilder {
 
         // Replace associations must deprecate the replaced document and copy   
         // the new document into all folders of the original one
+        // 替换关联必须弃用被替换的文档,并将新文档复制到原始文档的所有文件夹中
         from('direct:checkReplace')
             .choice().when().body({ body -> body.entry.associationType.isReplace() } as Function )
                 .multicast().to('direct:copyFolderMembership', 'direct:deprecateTargetDocs').end()
@@ -232,12 +246,14 @@ class Iti4142RouteBuilder extends RouteBuilder {
             .store()
 
         // Deprecate all replaced documents
+        // 弃用所有被替换的文档
         from('direct:deprecateTargetDocs')
             .search(SearchResult.DOC_ENTRY).uuid('entry.targetUuid').into('targetDocs')
             .splitEntries { it.targetDocs }
             .to('direct:deprecateDocEntry')
 
         // Deprecate a single replaced document
+        // 弃用单个被替换的文档
         from('direct:deprecateDocEntry')
             .logExchange(log) { 'deprecating: ' + it.in.body.entry.entryUuid }
             .status(DEPRECATED)
@@ -254,6 +270,7 @@ class Iti4142RouteBuilder extends RouteBuilder {
             .to('direct:deprecateDocEntry')
 
         // Any folders that are related to the association need an update of their time stamp
+        // 与关联相关的任何文件夹都需要更新其时间戳
         from('direct:updateTime')
             .search(SearchResult.FOLDER).uuid('entry.sourceUuid').into('folders')
             .splitEntries { it.folders }

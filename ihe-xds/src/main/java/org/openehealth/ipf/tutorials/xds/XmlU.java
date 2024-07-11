@@ -38,5 +38,17 @@ public class XmlU {
 //        FileUtil.appendUtf8String("\n",IheConstant.REPOSITORY_FILE_PATH);
     }
 
+    public static void saveDocumentFile(Document document) {
+        String mimeType = document.getDataHandler().getContentType();
+        String fileName = document.getDataHandler().getName();
+        log.warn("当前data handler里面存的文件类型是: " + mimeType);
+        log.warn("当前data handler里面存的文件名称是: " + fileName);
+        String filePath = "";
+        if (mimeType.equals("test/plain")) {
+
+        }
+
+    }
+
 
 }
