@@ -13,7 +13,7 @@ import java.io.OutputStream;
 public class XmlDataSource implements DataSource {
     /** Content stream size for tests with large content. Must be larger than 64K to ensure
      * CXF does use MTOM. */
-    public static final int STREAM_SIZE = 70000;
+    public static final int STREAM_SIZE = 80000;
 
     @Override
     public InputStream getInputStream() throws IOException {

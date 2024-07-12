@@ -12,6 +12,7 @@ import org.apache.camel.support.DefaultExchange;
 import org.apache.commons.io.IOUtils;
 import org.openehealth.ipf.commons.ihe.xds.core.SampleData;
 import org.openehealth.ipf.commons.ihe.xds.core.metadata.AvailabilityStatus;
+import org.openehealth.ipf.commons.ihe.xds.core.metadata.Document;
 import org.openehealth.ipf.commons.ihe.xds.core.metadata.DocumentEntry;
 import org.openehealth.ipf.commons.ihe.xds.core.metadata.Identifiable;
 import org.openehealth.ipf.commons.ihe.xds.core.requests.*;
@@ -35,6 +36,8 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+
+import static org.openehealth.ipf.tutorials.xds.util.XdsUtil.printDataHandler;
 
 /**
  * @author bovane bovane.ch@gmail.com
@@ -84,25 +87,36 @@ public class XdsClientServiceImpl implements XdsClientService {
         // 可以包含各种类型的数据,比如文件、二进制数据等。
         // 在 Apache Camel 中, DataHandler 通常用于在消息交换过程中传输附件或二进制数据。
         // getContent() 方法返回的是原始的数据对象,可能是 InputStream、byte[] 或其他类型
-//        provide.getDocuments().get(0).setDataHandler(createCoustomDataHandler());
         documentEntry.setHash(String.valueOf(ContentUtils.sha1(provide.getDocuments().get(0).getContent(DataHandler.class))));
         documentEntry.setSize(Long.valueOf(String.valueOf(ContentUtils.size(provide.getDocuments().get(0).getContent(DataHandler.class)))));
         log.warn(documentEntry.getSize().toString());
-        log.warn("打印data handler 中相关信息=====");
-        DataHandler dataHandler = provide.getDocuments().get(0).getDataHandler();
-        printDataHandler(dataHandler);
 
         // 提供自定义的data handler 信息
 
         // 设置 documentEntry
         provide.getDocuments().get(0).setDocumentEntry(documentEntry);
 
-        // 测试值是否设置进去
-        log.error("测试文档内容是否设置进去");
+        // 添加第二个文档
+        Document second = provide.getDocuments().get(0);
+        second.setDataHandler(createCoustomDataHandler());
+        // 重新设置Data Handler之后需要重新计算文档的hash 和 size
+        second.getDocumentEntry().setSize(Long.valueOf(String.valueOf(ContentUtils.size(second.getContent(DataHandler.class)))));
+        second.getDocumentEntry().setHash(String.valueOf(ContentUtils.sha1(second.getContent(DataHandler.class))));
+        provide.getDocuments().add(second);
+
+        // 测试第一个文档的值是否设置进去
+        log.error("测试第一个文档内容是否设置进去");
         log.warn(String.valueOf(provide.getDocuments().size()));
         log.warn(provide.getDocuments().get(0).getDocumentEntry().getEntryUuid());
         log.warn(provide.getDocuments().get(0).getDocumentEntry().getUniqueId());
         log.warn(String.valueOf(provide.getDocuments().get(0).getDocumentEntry().getSize()));
+
+        // 测试第二个文档的值是否设置进去
+        log.error("测试第二个文档内容是否设置进去");
+        log.warn(String.valueOf(provide.getDocuments().size()));
+        log.warn(provide.getDocuments().get(1).getDocumentEntry().getEntryUuid());
+        log.warn(provide.getDocuments().get(1).getDocumentEntry().getUniqueId());
+        log.warn(String.valueOf(provide.getDocuments().get(1).getDocumentEntry().getSize()));
 
         // 发送请求
         exchange.getIn().setBody(provide);
@@ -314,40 +328,7 @@ public class XdsClientServiceImpl implements XdsClientService {
 
     }
 
-    void printDataHandler(DataHandler dataHandler) throws IOException {
-        String mimeType = dataHandler.getContentType();
-        System.out.println("MIME Type: " + mimeType);
 
-        String fileName = dataHandler.getName();
-        System.out.println("File Name: " + fileName);
-
-        DataSource dataSource = dataHandler.getDataSource();
-        try (InputStream inputStream = dataSource.getInputStream()) {
-            // 读取输入流中的数据
-            byte[] bytes = IOUtils.toByteArray(inputStream);
-            System.out.println("Data Length: " + bytes.length);
-            // 根据实际需求处理数据
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Object content = dataHandler.getContent();
-        if (content instanceof byte[]) {
-            byte[] bytes = (byte[]) content;
-            System.out.println("Data Length: " + bytes.length);
-            // 根据实际需求处理数据
-        } else if (content instanceof InputStream) {
-            try (InputStream inputStream = (InputStream) content) {
-                byte[] bytes = IOUtils.toByteArray(inputStream);
-                System.out.println("Data Length: " + bytes.length);
-                // 根据实际需求处理数据
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("Unsupported data type: " + content.getClass().getName());
-        }
-    }
 
     static DataHandler createCoustomDataHandler() {
         return new DataHandler(new XmlDataSource());

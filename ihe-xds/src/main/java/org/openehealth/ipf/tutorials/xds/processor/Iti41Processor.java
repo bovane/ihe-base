@@ -31,11 +31,14 @@ import org.openehealth.ipf.commons.ihe.xds.core.requests.ProvideAndRegisterDocum
 import org.openehealth.ipf.commons.ihe.xds.core.transform.requests.ProvideAndRegisterDocumentSetTransformer;
 import org.openehealth.ipf.platform.camel.ihe.xds.core.converters.EbXML30Converters;
 import org.openehealth.ipf.platform.camel.ihe.xds.core.converters.XdsRenderingUtils;
+import org.openehealth.ipf.tutorials.xds.util.XdsUtil;
 import org.springframework.stereotype.Component;
 
+import javax.activation.DataHandler;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,8 +60,6 @@ public class Iti41Processor implements Processor {
 		ProvideAndRegisterDocumentSet request = message.getBody(ProvideAndRegisterDocumentSet.class);
 		// 使用Converter 将实体类转为 EB XML 实体类
 		var requestEbxml = EbXML30Converters.convert(request);
-//		var ebString = XdsRenderingUtils.renderEbxml(requestEbxml);
-		log.warn(renderEbxml(requestEbxml));
 
 		SubmissionSet submissionSet = request.getSubmissionSet();
 
@@ -68,12 +69,7 @@ public class Iti41Processor implements Processor {
 		List<Document> documentList = request.getDocuments();
 		log.info("文档的数量为:" + documentList.size());
 		// 取到documentEntry
-		List<DocumentEntry> documentEntries = new ArrayList<>();
-		documentList.forEach(document -> {
-			log.warn("文档的内容是:" + document.toString());
-			DocumentEntry documentEntry = document.getDocumentEntry();
-			documentEntries.add(documentEntry);
-		});
+		documentList.forEach(document -> log.warn("文档的内容是:" + document.toString()));
 
 	}
 
