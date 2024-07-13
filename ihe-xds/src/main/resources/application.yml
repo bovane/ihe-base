@@ -5,13 +5,8 @@ ipf:
     mock:
       enabled: true
       recent: 20
-  hl7v3:
-    caching: true
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,configprops,atna
+
+
 server:
   port: 9091
 #  ssl:

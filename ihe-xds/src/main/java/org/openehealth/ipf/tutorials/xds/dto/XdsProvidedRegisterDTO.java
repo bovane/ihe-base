@@ -26,7 +26,7 @@ public class XdsProvidedRegisterDTO {
     /**
      * 创建 SubmissionSet 所需的值
      */
-    // 添加组织
+
     private String organizationName;
     private String idNumber;
     // 添加作者信息
@@ -41,6 +41,7 @@ public class XdsProvidedRegisterDTO {
      * 创建 Folder 所需的值
      */
     private String folderUuid;
+
     private String folderUniqueId;
 
     /**
@@ -66,8 +67,6 @@ public class XdsProvidedRegisterDTO {
     private String folderDocEntrySourceUuid;
     private String folderDocEntryTargetUuid;
     private String folderDocEntryAssUuid;
-
-
 
 
     private String document;

@@ -96,14 +96,6 @@ public class XdsClientServiceImpl implements XdsClientService {
         // 设置 documentEntry
         provide.getDocuments().get(0).setDocumentEntry(documentEntry);
 
-        // 添加第二个文档
-        Document second = provide.getDocuments().get(0);
-        second.setDataHandler(createCoustomDataHandler());
-        // 重新设置Data Handler之后需要重新计算文档的hash 和 size
-        second.getDocumentEntry().setSize(Long.valueOf(String.valueOf(ContentUtils.size(second.getContent(DataHandler.class)))));
-        second.getDocumentEntry().setHash(String.valueOf(ContentUtils.sha1(second.getContent(DataHandler.class))));
-        provide.getDocuments().add(second);
-
         // 测试第一个文档的值是否设置进去
         log.error("测试第一个文档内容是否设置进去");
         log.warn(String.valueOf(provide.getDocuments().size()));
@@ -111,12 +103,20 @@ public class XdsClientServiceImpl implements XdsClientService {
         log.warn(provide.getDocuments().get(0).getDocumentEntry().getUniqueId());
         log.warn(String.valueOf(provide.getDocuments().get(0).getDocumentEntry().getSize()));
 
+        // 添加第二个文档
+//        Document second = provide.getDocuments().get(0);
+//        second.getDocumentEntry().setEntryUuid("9.8.7.6");
+//        second.setDataHandler(createCoustomDataHandler());
+//        // 重新设置Data Handler之后需要重新计算文档的hash 和 size
+//        second.getDocumentEntry().setSize(Long.valueOf(String.valueOf(ContentUtils.size(second.getContent(DataHandler.class)))));
+//        second.getDocumentEntry().setHash(String.valueOf(ContentUtils.sha1(second.getContent(DataHandler.class))));
+//        provide.getDocuments().add(second);
         // 测试第二个文档的值是否设置进去
-        log.error("测试第二个文档内容是否设置进去");
-        log.warn(String.valueOf(provide.getDocuments().size()));
-        log.warn(provide.getDocuments().get(1).getDocumentEntry().getEntryUuid());
-        log.warn(provide.getDocuments().get(1).getDocumentEntry().getUniqueId());
-        log.warn(String.valueOf(provide.getDocuments().get(1).getDocumentEntry().getSize()));
+//        log.error("测试第二个文档内容是否设置进去");
+//        log.warn(String.valueOf(provide.getDocuments().size()));
+//        log.warn(provide.getDocuments().get(1).getDocumentEntry().getEntryUuid());
+//        log.warn(provide.getDocuments().get(1).getDocumentEntry().getUniqueId());
+//        log.warn(String.valueOf(provide.getDocuments().get(1).getDocumentEntry().getSize()));
 
         // 发送请求
         exchange.getIn().setBody(provide);
