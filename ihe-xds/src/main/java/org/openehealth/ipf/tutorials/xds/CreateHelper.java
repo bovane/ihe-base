@@ -93,12 +93,12 @@ public abstract class CreateHelper {
 
         for(int var5 = 0; var5 < var4; ++var5) {
             Identifiable patientID = var3[var5];
-            SubmissionSet submissionSet = createSubmissionSet(patientID);
-            DocumentEntry docEntry = createDocumentEntry(patientID);
-            Folder folder = createFolder(patientID);
-            Association docAssociation = createAssociationDocEntryToSubmissionSet();
-            Association folderAssociation = createAssociationFolderToSubmissionSet();
-            Association docFolderAssociation = createAssociationDocEntryToFolder();
+            SubmissionSet submissionSet = createSubmissionSet(patientID,null);
+            DocumentEntry docEntry = createDocumentEntry(patientID, null);
+            Folder folder = createFolder(patientID, null);
+            Association docAssociation = createAssociationDocEntryToSubmissionSet(null);
+            Association folderAssociation = createAssociationFolderToSubmissionSet(null);
+            Association docFolderAssociation = createAssociationDocEntryToFolder(null);
             response.getSubmissionSets().add(submissionSet);
             response.getDocumentEntries().add(docEntry);
             response.getFolders().add(folder);
@@ -161,16 +161,23 @@ public abstract class CreateHelper {
     }
 
     public static ProvideAndRegisterDocumentSet createProvideAndRegisterDocumentSet(XdsProvidedRegisterDTO xdsProvidedRegisterDTO) {
-
-        Identifiable patientID = new Identifiable("id3", new AssigningAuthority("1.3"));
-        SubmissionSet submissionSet = createSubmissionSet(patientID);
-        DocumentEntry docEntry = createDocumentEntry(patientID);
-        Folder folder = createFolder(patientID);
-        Association docAssociation = createAssociationDocEntryToSubmissionSet();
-        Association folderAssociation = createAssociationFolderToSubmissionSet();
-        Association docFolderAssociation = createAssociationDocEntryToFolder();
+        // 创建患者标识信息
+        Identifiable patientID = new Identifiable(xdsProvidedRegisterDTO.getPatientId(), new AssigningAuthority(xdsProvidedRegisterDTO.getAssigningAuthorityId()));
+        // 创建提交集合信息
+        SubmissionSet submissionSet = createSubmissionSet(patientID, xdsProvidedRegisterDTO);
+        // 创建DocumentEntry
+        DocumentEntry docEntry = createDocumentEntry(patientID, xdsProvidedRegisterDTO);
+        // 创建文件夹
+        Folder folder = createFolder(patientID, xdsProvidedRegisterDTO);
+        // 创建关联关系
+        Association docAssociation = createAssociationDocEntryToSubmissionSet(xdsProvidedRegisterDTO);
+        Association folderAssociation = createAssociationFolderToSubmissionSet(xdsProvidedRegisterDTO);
+        Association docFolderAssociation = createAssociationDocEntryToFolder(xdsProvidedRegisterDTO);
+        // 创建 DataHandler,即传输文档内容, content 的内容来自 DataHandler
         DataHandler dataHandler = createDataHandler();
         Document doc = new Document(docEntry, dataHandler);
+
+        // 组装ProvideAndRegisterDocumentSet
         ProvideAndRegisterDocumentSet request = new ProvideAndRegisterDocumentSet();
         request.setSubmissionSet(submissionSet);
         request.getDocuments().add(doc);
@@ -182,71 +189,75 @@ public abstract class CreateHelper {
         return request;
     }
 
-    private static Association createAssociationDocEntryToFolder() {
+    private static Association createAssociationDocEntryToFolder(XdsProvidedRegisterDTO xdsProvidedRegisterDTO) {
         Association docFolderAssociation = new Association();
         docFolderAssociation.setAssociationType(AssociationType.HAS_MEMBER);
-        docFolderAssociation.setSourceUuid("folder01");
-        docFolderAssociation.setTargetUuid("document01");
-        docFolderAssociation.setEntryUuid("docFolderAss");
+        docFolderAssociation.setSourceUuid(xdsProvidedRegisterDTO.getFolderDocEntrySourceUuid());
+        docFolderAssociation.setTargetUuid(xdsProvidedRegisterDTO.getFolderDocEntryTargetUuid());
+        docFolderAssociation.setEntryUuid(xdsProvidedRegisterDTO.getFolderDocEntryAssUuid());
         return docFolderAssociation;
     }
 
-    private static Association createAssociationFolderToSubmissionSet() {
+    private static Association createAssociationFolderToSubmissionSet(XdsProvidedRegisterDTO xdsProvidedRegisterDTO) {
         Association folderAssociation = new Association();
         folderAssociation.setAssociationType(AssociationType.HAS_MEMBER);
-        folderAssociation.setSourceUuid("submissionSet01");
-        folderAssociation.setTargetUuid("folder01");
-        folderAssociation.setEntryUuid("folderAss");
+        folderAssociation.setSourceUuid(xdsProvidedRegisterDTO.getFolderSourceUuid());
+        folderAssociation.setTargetUuid(xdsProvidedRegisterDTO.getFolderTargetUuid());
+        folderAssociation.setEntryUuid(xdsProvidedRegisterDTO.getFolderAssUuid());
         folderAssociation.setPreviousVersion("110");
         return folderAssociation;
     }
 
-    private static Association createAssociationDocEntryToSubmissionSet() {
+    private static Association createAssociationDocEntryToSubmissionSet(XdsProvidedRegisterDTO xdsProvidedRegisterDTO) {
         Association docAssociation = new Association();
         docAssociation.setAssociationType(AssociationType.HAS_MEMBER);
-        docAssociation.setSourceUuid("submissionSet01");
-        docAssociation.setTargetUuid("document01");
+        docAssociation.setSourceUuid(xdsProvidedRegisterDTO.getDocEntrySourceUuid());
+        docAssociation.setTargetUuid(xdsProvidedRegisterDTO.getDocEntryTargetUuid());
         docAssociation.setLabel(AssociationLabel.ORIGINAL);
-        docAssociation.setEntryUuid("docAss");
+        docAssociation.setEntryUuid(xdsProvidedRegisterDTO.getDocEntryAssUuid());
         docAssociation.setPreviousVersion("111");
         return docAssociation;
     }
 
-    public static Folder createFolder(Identifiable patientID) {
+    public static Folder createFolder(Identifiable patientID, XdsProvidedRegisterDTO xdsProvidedRegisterDTO) {
         Folder folder = new Folder();
         folder.setAvailabilityStatus(AvailabilityStatus.APPROVED);
         folder.getCodeList().add(new Code("code7", new LocalizedString("code7"), "scheme7"));
         folder.setComments(new LocalizedString("comments3"));
-        folder.setEntryUuid("folder01");
+        folder.setEntryUuid(xdsProvidedRegisterDTO.getFolderUuid());
         folder.setLastUpdateTime("19820910121315");
         folder.setPatientId(patientID);
         folder.setTitle(new LocalizedString("Folder 01", "en-US", "UTF8"));
-        folder.setUniqueId("1.48574589");
+        folder.setUniqueId(xdsProvidedRegisterDTO.getFolderUniqueId());
         return folder;
     }
 
-    public static SubmissionSet createSubmissionSet(Identifiable patientID) {
+    public static SubmissionSet createSubmissionSet(Identifiable patientID, XdsProvidedRegisterDTO xdsProvidedRegisterDTO) {
         Recipient recipient = new Recipient();
-        recipient.setOrganization(new Organization("org", (String)null, (AssigningAuthority)null));
+        recipient.setOrganization(new Organization(xdsProvidedRegisterDTO.getOrganizationName(), xdsProvidedRegisterDTO.getIdNumber(), (AssigningAuthority)null));
+
         Author author = new Author();
-        author.setAuthorPerson(new Person(new Identifiable("id1", new AssigningAuthority("1.1")), new XpnName("Otto", (String)null, (String)null, (String)null, (String)null, (String)null)));
+        author.setAuthorPerson(new Person(new Identifiable(xdsProvidedRegisterDTO.getAuthorId(), new AssigningAuthority("1.1")), new XpnName("Otto", (String)null, (String)null, (String)null, (String)null, (String)null)));
+
         SubmissionSet submissionSet = new SubmissionSet();
         submissionSet.getAuthors().add(author);
         submissionSet.setAvailabilityStatus(AvailabilityStatus.APPROVED);
-        submissionSet.setComments(new LocalizedString("comments1"));
+        submissionSet.setComments(new LocalizedString("comments1Test"));
         submissionSet.setContentTypeCode(new Code("code1", new LocalizedString("code1"), "scheme1"));
-        submissionSet.setEntryUuid("submissionSet01");
+        submissionSet.setEntryUuid(xdsProvidedRegisterDTO.getSubmissionSetEntryUuid());
         submissionSet.getIntendedRecipients().add(recipient);
         submissionSet.setPatientId(patientID);
-        submissionSet.setSourceId("1.2.3");
+
+        submissionSet.setSourceId(xdsProvidedRegisterDTO.getSubmissionSetSourceId());
         submissionSet.setSubmissionTime("1980");
         submissionSet.setTitle(new LocalizedString("Submission Set 01", "en-US", "UTF8"));
-        submissionSet.setUniqueId("1.123");
-        submissionSet.setHomeCommunityId("urn:oid:1.2.3.4.5.6.2333.23");
+        submissionSet.setUniqueId(xdsProvidedRegisterDTO.getSubmissionUniqueId());
+        submissionSet.setHomeCommunityId(xdsProvidedRegisterDTO.getSubmissionHomeCommunityId());
         return submissionSet;
     }
 
-    public static DocumentEntry createDocumentEntry(Identifiable patientID) {
+    public static DocumentEntry createDocumentEntry(Identifiable patientID, XdsProvidedRegisterDTO xdsProvidedRegisterDTO) {
+        // 设置作者信息
         Author author = new Author();
         Name name = new XpnName();
         name.setFamilyName("Norbi");
@@ -258,13 +269,17 @@ public abstract class CreateHelper {
         author.getAuthorSpecialty().add(new Identifiable("spec2"));
         author.getAuthorTelecom().add(new Telecom("author1@acme.org"));
         author.getAuthorTelecom().add(new Telecom("author2@acme.org"));
+        // 设置地址信息
         Address address = new Address();
         address.setStreetAddress("hier");
+        // 设置患者基本信息
         PatientInfo patientInfo = new PatientInfo();
         patientInfo.getAddresses().add(address);
         patientInfo.setDateOfBirth("1980");
         patientInfo.setGender("M");
         patientInfo.getNames().add(new XpnName("Susi", (String)null, (String)null, (String)null, (String)null, (String)null));
+
+        // 组装DocumentEntry
         DocumentEntry docEntry = new DocumentEntry();
         docEntry.getAuthors().add(author);
         docEntry.setAvailabilityStatus(AvailabilityStatus.APPROVED);
@@ -272,7 +287,8 @@ public abstract class CreateHelper {
         docEntry.setComments(new LocalizedString("comment2"));
         docEntry.getConfidentialityCodes().add(new Code("code8", new LocalizedString("code8"), "scheme8"));
         docEntry.setCreationTime("1981");
-        docEntry.setEntryUuid("document01");
+
+        docEntry.setEntryUuid(xdsProvidedRegisterDTO.getDocEntryUuid());
         docEntry.getEventCodeList().add(new Code("code9", new LocalizedString("code9"), "scheme9"));
         docEntry.setFormatCode(new Code("code3", new LocalizedString("code3"), "scheme3"));
         docEntry.setHash("1234567890123456789012345678901234567890");
@@ -280,31 +296,34 @@ public abstract class CreateHelper {
         docEntry.setLanguageCode("en-US");
         docEntry.setLegalAuthenticator(new Person(new Identifiable("legal", new AssigningAuthority("1.7")), new XpnName("Gustav", (String)null, (String)null, (String)null, (String)null, (String)null)));
         docEntry.setMimeType("application/octet-stream");
+
         docEntry.setPatientId(patientID);
         docEntry.setPracticeSettingCode(new Code("code5", new LocalizedString("code5"), "scheme5"));
-        docEntry.setRepositoryUniqueId("1.2.3.4");
+        docEntry.setRepositoryUniqueId(xdsProvidedRegisterDTO.getRepositoryUniqueId());
         docEntry.setServiceStartTime("198012");
         docEntry.setServiceStopTime("198101");
         docEntry.setSize(123L);
+        // 设置源患者信息
         docEntry.setSourcePatientId(new Identifiable("source", new AssigningAuthority("4.1")));
         docEntry.setSourcePatientInfo(patientInfo);
         docEntry.setTitle(new LocalizedString("Document 01", "en-US", "UTF8"));
         docEntry.setTypeCode(new Code("code6", new LocalizedString("code6"), "scheme6"));
-        docEntry.setUniqueId("32848902348");
+
+        docEntry.setUniqueId(xdsProvidedRegisterDTO.getDocEntryUniqueId());
         docEntry.setUri("http://hierunten.com");
         docEntry.getReferenceIdList().add(new ReferenceId("ref-id-1", new CXiAssigningAuthority("ABCD", "1.1.2.3", "ISO"), "urn:ihe:iti:xds:2013:order"));
         docEntry.getReferenceIdList().add(new ReferenceId("ref-id-2", new CXiAssigningAuthority("DEFG", "2.1.2.3", "ISO"), "vendor-defined"));
         return docEntry;
     }
 
-    public static RegisterDocumentSet createRegisterDocumentSet() {
+    public static RegisterDocumentSet createRegisterDocumentSet(XdsProvidedRegisterDTO xdsProvidedRegisterDTO) {
         Identifiable patientID = new Identifiable("id3", new AssigningAuthority("1.3"));
-        SubmissionSet submissionSet = createSubmissionSet(patientID);
-        DocumentEntry docEntry = createDocumentEntry(patientID);
-        Folder folder = createFolder(patientID);
-        Association docAssociation = createAssociationDocEntryToSubmissionSet();
-        Association folderAssociation = createAssociationFolderToSubmissionSet();
-        Association docFolderAssociation = createAssociationDocEntryToFolder();
+        SubmissionSet submissionSet = createSubmissionSet(patientID,xdsProvidedRegisterDTO);
+        DocumentEntry docEntry = createDocumentEntry(patientID,null);
+        Folder folder = createFolder(patientID, null);
+        Association docAssociation = createAssociationDocEntryToSubmissionSet(null);
+        Association folderAssociation = createAssociationFolderToSubmissionSet(null);
+        Association docFolderAssociation = createAssociationDocEntryToFolder(null);
         RegisterDocumentSet request = new RegisterDocumentSet();
         request.setSubmissionSet(submissionSet);
         request.getDocumentEntries().add(docEntry);
