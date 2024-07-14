@@ -23,6 +23,7 @@ import org.openehealth.ipf.commons.ihe.xds.core.responses.Response;
 import org.openehealth.ipf.commons.ihe.xds.core.responses.RetrievedDocumentSet;
 import org.openehealth.ipf.platform.camel.core.util.Exchanges;
 import org.openehealth.ipf.tutorials.xds.ContentUtils;
+import org.openehealth.ipf.tutorials.xds.CreateHelper;
 import org.openehealth.ipf.tutorials.xds.datasource.XmlDataSource;
 import org.openehealth.ipf.tutorials.xds.dto.XdsProvidedRegisterDTO;
 import org.openehealth.ipf.tutorials.xds.service.XdsClientService;
@@ -65,7 +66,8 @@ public class XdsClientServiceImpl implements XdsClientService {
         exchange.setPattern(ExchangePattern.InOut);
 
         // generate documentEntry,这里的SampleData只创建单文档信息
-        ProvideAndRegisterDocumentSet provide = SampleData.createProvideAndRegisterDocumentSet();
+//        ProvideAndRegisterDocumentSet provide = SampleData.createProvideAndRegisterDocumentSet();
+        ProvideAndRegisterDocumentSet provide = CreateHelper.createProvideAndRegisterDocumentSet(xdsProvidedRegisterDTO);
         DocumentEntry documentEntry = provide.getDocuments().get(0).getDocumentEntry();
 
         // 添加额外元数据
@@ -78,7 +80,7 @@ public class XdsClientServiceImpl implements XdsClientService {
         patientId.setId(UUID.randomUUID().toString());
         log.warn(patientId.getId());
         // 设置文档唯一ID
-        documentEntry.setUniqueId("4.3.2.1");
+//        documentEntry.setUniqueId("4.3.2.1");
 
 
         // 计算文档的Hash 和 Size
@@ -104,19 +106,19 @@ public class XdsClientServiceImpl implements XdsClientService {
         log.warn(String.valueOf(provide.getDocuments().get(0).getDocumentEntry().getSize()));
 
         // 添加第二个文档
-//        Document second = provide.getDocuments().get(0);
-//        second.getDocumentEntry().setEntryUuid("9.8.7.6");
-//        second.setDataHandler(createCoustomDataHandler());
-//        // 重新设置Data Handler之后需要重新计算文档的hash 和 size
-//        second.getDocumentEntry().setSize(Long.valueOf(String.valueOf(ContentUtils.size(second.getContent(DataHandler.class)))));
-//        second.getDocumentEntry().setHash(String.valueOf(ContentUtils.sha1(second.getContent(DataHandler.class))));
-//        provide.getDocuments().add(second);
+        Document second = new Document();
+        second.setDocumentEntry(SampleData.createDocumentEntry(patientId));
+        second.setDataHandler(createCoustomDataHandler());
+        // 重新设置Data Handler之后需要重新计算文档的hash 和 size
+        second.getDocumentEntry().setSize(Long.valueOf(String.valueOf(ContentUtils.size(second.getContent(DataHandler.class)))));
+        second.getDocumentEntry().setHash(String.valueOf(ContentUtils.sha1(second.getContent(DataHandler.class))));
+        provide.getDocuments().add(second);
         // 测试第二个文档的值是否设置进去
-//        log.error("测试第二个文档内容是否设置进去");
-//        log.warn(String.valueOf(provide.getDocuments().size()));
-//        log.warn(provide.getDocuments().get(1).getDocumentEntry().getEntryUuid());
-//        log.warn(provide.getDocuments().get(1).getDocumentEntry().getUniqueId());
-//        log.warn(String.valueOf(provide.getDocuments().get(1).getDocumentEntry().getSize()));
+        log.error("测试第二个文档内容是否设置进去");
+        log.warn(String.valueOf(provide.getDocuments().size()));
+        log.warn(provide.getDocuments().get(1).getDocumentEntry().getEntryUuid());
+        log.warn(provide.getDocuments().get(1).getDocumentEntry().getUniqueId());
+        log.warn(String.valueOf(provide.getDocuments().get(1).getDocumentEntry().getSize()));
 
         // 发送请求
         exchange.getIn().setBody(provide);

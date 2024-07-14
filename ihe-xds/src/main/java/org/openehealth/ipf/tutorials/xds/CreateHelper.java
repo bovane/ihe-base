@@ -74,6 +74,7 @@ import org.openehealth.ipf.commons.ihe.xds.core.responses.RetrievedDocument;
 import org.openehealth.ipf.commons.ihe.xds.core.responses.RetrievedDocumentSet;
 import org.openehealth.ipf.commons.ihe.xds.core.responses.Severity;
 import org.openehealth.ipf.commons.ihe.xds.core.responses.Status;
+import org.openehealth.ipf.tutorials.xds.datasource.XmlDataSource;
 import org.openehealth.ipf.tutorials.xds.dto.XdsProvidedRegisterDTO;
 
 /**
@@ -157,7 +158,8 @@ public abstract class CreateHelper {
     }
 
     public static DataHandler createDataHandler() {
-        return new DataHandler(new LargeDataSource());
+//        return new DataHandler(new LargeDataSource());
+        return new DataHandler(new XmlDataSource());
     }
 
     public static ProvideAndRegisterDocumentSet createProvideAndRegisterDocumentSet(XdsProvidedRegisterDTO xdsProvidedRegisterDTO) {

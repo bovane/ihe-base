@@ -28,7 +28,7 @@ public class XdsProvidedRegisterDTO {
      */
 
     private String organizationName = "org";
-    private String idNumber = "123456";
+    private String idNumber;
 
     // 添加AssigningAuthority信息
     private String universalId = "1.1";
