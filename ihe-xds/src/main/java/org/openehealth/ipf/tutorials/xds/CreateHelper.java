@@ -158,8 +158,7 @@ public abstract class CreateHelper {
     }
 
     public static DataHandler createDataHandler() {
-//        return new DataHandler(new LargeDataSource());
-        return new DataHandler(new XmlDataSource());
+        return new DataHandler(new LargeDataSource());
     }
 
     public static ProvideAndRegisterDocumentSet createProvideAndRegisterDocumentSet(XdsProvidedRegisterDTO xdsProvidedRegisterDTO) {
