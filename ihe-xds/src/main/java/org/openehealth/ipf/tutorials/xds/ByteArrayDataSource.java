@@ -29,7 +29,7 @@ public class ByteArrayDataSource implements DataSource {
     private final byte[] data;
     private final String contentType;
 
-    ByteArrayDataSource(byte[] data, String contentType) {
+    public ByteArrayDataSource(byte[] data, String contentType) {
         this.data = data;
         this.contentType = contentType;
     }
