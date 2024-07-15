@@ -86,4 +86,7 @@ public class XdsProvidedRegisterDTO {
 
 
     private String document;
+    private String filePath;
+    private String contentType;
+    private String name;
 }

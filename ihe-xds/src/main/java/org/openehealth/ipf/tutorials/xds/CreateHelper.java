@@ -169,11 +169,11 @@ public abstract class CreateHelper {
         // 创建DocumentEntry
         DocumentEntry docEntry = createDocumentEntry(patientID, xdsProvidedRegisterDTO);
         // 创建文件夹
-        Folder folder = createFolder(patientID, xdsProvidedRegisterDTO);
+//        Folder folder = createFolder(patientID, xdsProvidedRegisterDTO);
         // 创建关联关系
-        Association docAssociation = createAssociationDocEntryToSubmissionSet(xdsProvidedRegisterDTO);
-        Association folderAssociation = createAssociationFolderToSubmissionSet(xdsProvidedRegisterDTO);
-        Association docFolderAssociation = createAssociationDocEntryToFolder(xdsProvidedRegisterDTO);
+//        Association docAssociation = createAssociationDocEntryToSubmissionSet(xdsProvidedRegisterDTO);
+//        Association folderAssociation = createAssociationFolderToSubmissionSet(xdsProvidedRegisterDTO);
+//        Association docFolderAssociation = createAssociationDocEntryToFolder(xdsProvidedRegisterDTO);
         // 创建 DataHandler,即传输文档内容, content 的内容来自 DataHandler
         DataHandler dataHandler = createDataHandler();
         Document doc = new Document(docEntry, dataHandler);
@@ -182,10 +182,10 @@ public abstract class CreateHelper {
         ProvideAndRegisterDocumentSet request = new ProvideAndRegisterDocumentSet();
         request.setSubmissionSet(submissionSet);
         request.getDocuments().add(doc);
-        request.getFolders().add(folder);
-        request.getAssociations().add(docAssociation);
-        request.getAssociations().add(folderAssociation);
-        request.getAssociations().add(docFolderAssociation);
+//        request.getFolders().add(folder);
+//        request.getAssociations().add(docAssociation);
+//        request.getAssociations().add(folderAssociation);
+//        request.getAssociations().add(docFolderAssociation);
         request.setTargetHomeCommunityId("urn:oid:1.2.3.4.5.6.2333.23");
         return request;
     }
