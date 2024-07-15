@@ -1,35 +1,29 @@
 package org.openehealth.ipf.tutorials.xds.service.impl;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.camel.*;
+import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.ExchangePattern;
+import org.apache.camel.ProducerTemplate;
 import org.apache.camel.support.DefaultExchange;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.AvailabilityStatus;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.DocumentEntry;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.Identifiable;
+import org.apache.commons.io.IOUtils;
 import org.openehealth.ipf.commons.ihe.xds.core.requests.ProvideAndRegisterDocumentSet;
 import org.openehealth.ipf.commons.ihe.xds.core.requests.QueryRegistry;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.query.FindDocumentsQuery;
+import org.openehealth.ipf.commons.ihe.xds.core.requests.RetrieveDocumentSet;
 import org.openehealth.ipf.commons.ihe.xds.core.requests.query.QueryReturnType;
 import org.openehealth.ipf.commons.ihe.xds.core.responses.QueryResponse;
 import org.openehealth.ipf.commons.ihe.xds.core.responses.Response;
+import org.openehealth.ipf.commons.ihe.xds.core.responses.RetrievedDocumentSet;
 import org.openehealth.ipf.platform.camel.core.util.Exchanges;
 import org.openehealth.ipf.platform.camel.ihe.xds.core.converters.EbXML30Converters;
 import org.openehealth.ipf.platform.camel.ihe.xds.core.converters.XdsRenderingUtils;
-import org.openehealth.ipf.tutorials.xds.ContentUtils;
-import org.openehealth.ipf.tutorials.xds.CreateHelper;
 import org.openehealth.ipf.tutorials.xds.CreateXdsHelper;
-import org.openehealth.ipf.tutorials.xds.XmlUtil;
-import org.openehealth.ipf.tutorials.xds.datasource.PdfDataSource;
 import org.openehealth.ipf.tutorials.xds.dto.XdsProvidedRegisterDTO;
 import org.openehealth.ipf.tutorials.xds.service.IheClientService;
 import org.springframework.stereotype.Service;
 
-import javax.activation.DataHandler;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.io.InputStream;
 
 /**
  * @author bovane bovane.ch@gmial.com
@@ -88,7 +82,7 @@ public class IheClientServiceImpl implements IheClientService {
         queryRegistry.setReturnType(QueryReturnType.LEAF_CLASS);
         exchange.getIn().setBody(queryRegistry);
 
-        // 发送请求 到 ITI18
+        // 发送请求 到 ITI18, 这里是找到meta data,元数据信息
         String endpointUrl = StrUtil.isNotEmpty(xdsProvidedRegisterDTO.getIti18EndpointUrl()) ? xdsProvidedRegisterDTO.getIti18EndpointUrl() : "xds-iti18://localhost:9091/services/xds-iti18";
         exchange = producerTemplate.send(endpointUrl, exchange);
 
@@ -106,6 +100,29 @@ public class IheClientServiceImpl implements IheClientService {
         log.warn(String.valueOf(queryResponse.getDocumentEntries().size()));
         log.warn(queryResponse.getDocumentEntries().get(0).getEntryUuid());
         log.warn(String.valueOf(queryResponse.getDocumentEntries().get(0).getSize()));
+
+
+        log.error("=======开始测试取文档 ITI43======");
+        // 设置取文档的查询体
+        RetrieveDocumentSet retrieveDocumentSet = CreateXdsHelper.createRetrieveDocumentSet(xdsProvidedRegisterDTO);
+
+        // 发送请求
+        exchange.getIn().setBody(retrieveDocumentSet);
+        String iti43Endpoint = StrUtil.isNotEmpty(xdsProvidedRegisterDTO.getIti43EndpointUrl()) ? xdsProvidedRegisterDTO.getIti43EndpointUrl() : "xds-iti43://localhost:9091/services/xds-iti43";
+
+        exchange = producerTemplate.send(iti43Endpoint, exchange);
+
+        RetrievedDocumentSet retrieveResponse = exchange.getMessage().getMandatoryBody(RetrievedDocumentSet.class);
+        log.warn(providedResponse.toString());
+        // 查看附件中的内容 (即文档内容)
+        InputStream inputStream = retrieveResponse.getDocuments().get(0).getDataHandler().getInputStream();
+        String data = IOUtils.toString(inputStream);
+
+        log.warn(data);
+        System.out.println(data.length());
+
+
+
     }
 
     @Override

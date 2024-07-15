@@ -67,6 +67,7 @@ public class Iti41Processor implements Processor {
 
 		List<Folder> folders = request.getFolders();
 		log.warn("folders的数量为:" + folders.size());
+		// 如果有文件夹,那么先创建文件夹
 		folders.forEach(folder -> {
 			log.warn("folder的内容为" + folder.toString());
 			// 文件夹的名称
@@ -78,7 +79,6 @@ public class Iti41Processor implements Processor {
 			if (!FileUtil.isDirectory(folderPath)) {
 				FileUtil.mkdir(folderPath);
 			}
-
 		});
 
 		List<Document> documentList = request.getDocuments();
@@ -101,10 +101,14 @@ public class Iti41Processor implements Processor {
 		});
 
 		List<Association> associations = request.getAssociations();
+		log.warn("Association的数量为: " + associations.size());
 		associations.forEach(association -> {
 			log.info("打印Association: " + association.toString());
-
 		});
+
+		// 如果有Association 关系,那么将对应的关系存入数据库,存入数据库后 (元数据信息存入数据库)
+		// 最后存储实际的文档(有文件夹信息就存入文件夹、没有文件夹Association,那么就存在默认文件夹中)
+
 
 		// 原封不动的将 request的内容存放到 body 里面
 		exchange.getOut().setBody(request);

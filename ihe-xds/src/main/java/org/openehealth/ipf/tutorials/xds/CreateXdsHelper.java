@@ -3,8 +3,10 @@ package org.openehealth.ipf.tutorials.xds;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.openehealth.ipf.commons.ihe.xds.core.metadata.*;
+import org.openehealth.ipf.commons.ihe.xds.core.requests.DocumentReference;
 import org.openehealth.ipf.commons.ihe.xds.core.requests.ProvideAndRegisterDocumentSet;
 import org.openehealth.ipf.commons.ihe.xds.core.requests.QueryRegistry;
+import org.openehealth.ipf.commons.ihe.xds.core.requests.RetrieveDocumentSet;
 import org.openehealth.ipf.commons.ihe.xds.core.requests.query.DocumentsQuery;
 import org.openehealth.ipf.commons.ihe.xds.core.requests.query.FindDocumentsQuery;
 import org.openehealth.ipf.commons.ihe.xds.core.requests.query.QueryList;
@@ -36,7 +38,6 @@ public abstract class CreateXdsHelper {
         // 设置DataHandler,即文档的内容
         DataHandler dataHandler = new DataHandler(new PdfDataSource(xdsProvidedRegisterDTO.getFilePath(), xdsProvidedRegisterDTO.getContentType() ,xdsProvidedRegisterDTO.getName()));
         Document doc = new Document(docEntry, dataHandler);
-
 
         // 组装ProvideAndRegisterDocumentSet
         ProvideAndRegisterDocumentSet request = new ProvideAndRegisterDocumentSet();
@@ -152,6 +153,15 @@ public abstract class CreateXdsHelper {
         query.setDocumentAvailability(Collections.singletonList(DocumentAvailability.ONLINE));
         query.setMetadataLevel(1);
         return new QueryRegistry(query);
+    }
+
+    public static RetrieveDocumentSet createRetrieveDocumentSet(XdsProvidedRegisterDTO xdsProvidedRegisterDTO) {
+        RetrieveDocumentSet request = new RetrieveDocumentSet();
+        DocumentReference documentReference = new DocumentReference();
+        documentReference.setDocumentUniqueId(xdsProvidedRegisterDTO.getDocEntryUniqueId());
+        documentReference.setRepositoryUniqueId(xdsProvidedRegisterDTO.getRepositoryUniqueId());
+        request.getDocuments().add(documentReference);
+        return request;
     }
 
 
