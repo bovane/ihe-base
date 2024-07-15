@@ -19,4 +19,7 @@ public class IheConstant {
     public static final String PRPA_AR201302UV02 = "PRPA_AR201302UV02";
 
     public static final String PRPA_AR201304UV02 = "PRPA_AR201304UV02";
+
+    public static final String BASE_FILE_PATH = "/Users/bovane/Documents/hos-app/logs/";
+
 }

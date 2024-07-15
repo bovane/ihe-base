@@ -66,8 +66,8 @@ public class XdsClientServiceImpl implements XdsClientService {
         exchange.setPattern(ExchangePattern.InOut);
 
         // generate documentEntry,这里的SampleData只创建单文档信息
-//        ProvideAndRegisterDocumentSet provide = SampleData.createProvideAndRegisterDocumentSet();
-        ProvideAndRegisterDocumentSet provide = CreateHelper.createProvideAndRegisterDocumentSet(xdsProvidedRegisterDTO);
+        ProvideAndRegisterDocumentSet provide = SampleData.createProvideAndRegisterDocumentSet();
+//        ProvideAndRegisterDocumentSet provide = CreateHelper.createProvideAndRegisterDocumentSet(xdsProvidedRegisterDTO);
         DocumentEntry documentEntry = provide.getDocuments().get(0).getDocumentEntry();
 
         // 添加额外元数据

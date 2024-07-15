@@ -56,7 +56,6 @@ class DataStore {
 
          def data= document.getDataHandler().getInputStream();
          log.warn(IOUtils.toString(data))
-//         XmlU.convertToXml(document)
          def uniqueId = document.documentEntry.uniqueId
          def contents = ContentUtils.getContent(document.getContent(DataHandler))
          log.info("文档的内容是: " + IOUtils.toString(contents))

@@ -16,6 +16,7 @@
  */
 package org.openehealth.ipf.tutorials.xds.processor;
 
+import cn.hutool.core.io.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
@@ -24,14 +25,12 @@ import org.apache.commons.io.IOUtils;
 import org.openehealth.ipf.commons.ihe.ws.cxf.NonReadingAttachmentMarshaller;
 import org.openehealth.ipf.commons.ihe.xds.core.XdsJaxbDataBinding;
 import org.openehealth.ipf.commons.ihe.xds.core.ebxml.ebxml30.EbXMLFactory30;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.Document;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.DocumentEntry;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.Folder;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.SubmissionSet;
+import org.openehealth.ipf.commons.ihe.xds.core.metadata.*;
 import org.openehealth.ipf.commons.ihe.xds.core.requests.ProvideAndRegisterDocumentSet;
 import org.openehealth.ipf.commons.ihe.xds.core.transform.requests.ProvideAndRegisterDocumentSetTransformer;
 import org.openehealth.ipf.platform.camel.ihe.xds.core.converters.EbXML30Converters;
 import org.openehealth.ipf.platform.camel.ihe.xds.core.converters.XdsRenderingUtils;
+import org.openehealth.ipf.tutorials.constant.IheConstant;
 import org.openehealth.ipf.tutorials.xds.ByteArrayDataSource;
 import org.openehealth.ipf.tutorials.xds.ContentUtils;
 import org.openehealth.ipf.tutorials.xds.util.XdsUtil;
@@ -68,6 +67,19 @@ public class Iti41Processor implements Processor {
 
 		List<Folder> folders = request.getFolders();
 		log.warn("folders的数量为:" + folders.size());
+		folders.forEach(folder -> {
+			log.warn("folder的内容为" + folder.toString());
+			// 文件夹的名称
+			String folderEntryId = folder.getEntryUuid();
+			// 创建文件夹
+			String folderPath = IheConstant.BASE_FILE_PATH + folderEntryId;
+			log.warn("完整的文件夹路径为" + folderPath);
+			// 如果文件夹不存在,那么创建文件夹
+			if (!FileUtil.isDirectory(folderPath)) {
+				FileUtil.mkdir(folderPath);
+			}
+
+		});
 
 		List<Document> documentList = request.getDocuments();
 		log.info("文档的数量为:" + documentList.size());
@@ -76,42 +88,30 @@ public class Iti41Processor implements Processor {
 			log.warn("文档的内容是:" + document.toString());
 			DataHandler dataHandler = document.getContent(DataHandler.class);
 			byte[] content = (byte[]) ContentUtils.getContent(dataHandler);
+			// 打印文件内容
 			log.warn(String.valueOf(content.length));
 			log.warn(IOUtils.toString(content));
+
 			log.warn("当前data handler里面存的文件类型是: " + document.getDataHandler().getContentType());
 			log.warn("当前data handler里面存的文件名称是: " + document.getDataHandler().getName());
 
             document.setContent(DataHandler.class,
 					new DataHandler(new ByteArrayDataSource(content, dataHandler.getContentType())));
 
+		});
+
+		List<Association> associations = request.getAssociations();
+		associations.forEach(association -> {
+			log.info("打印Association: " + association.toString());
 
 		});
+
 		// 原封不动的将 request的内容存放到 body 里面
 		exchange.getOut().setBody(request);
 
 	}
 
-	/**
-	 * 将EB XML实体类转为 XML
-	 *
-	 * @author bovane
-	 * [ebXml]
-	 * @return java.lang.String
-	 */
-	public static String renderEbxml(Object ebXml) {
-		try {
-			StringWriter writer = new StringWriter();
-			JAXBContext context = JAXBContext.newInstance(ebXml.getClass());
-			Marshaller marshaller = context.createMarshaller();
-			marshaller.setAttachmentMarshaller(new NonReadingAttachmentMarshaller());
-			marshaller.setListener(new XdsJaxbDataBinding.MarshallerListener());
-			marshaller.setProperty("jaxb.formatted.output", true);
-			marshaller.marshal(ebXml, writer);
-			return writer.toString();
-		} catch (JAXBException var3) {
-			throw new RuntimeException(var3);
-		}
-	}
+
 
 	public static String transformer(ProvideAndRegisterDocumentSet provideAndRegisterDocumentSet) {
 		String result = "";
