@@ -1,81 +1,18 @@
 package org.openehealth.ipf.tutorials.xds;
 
 import lombok.Data;
+import org.openehealth.ipf.commons.ihe.ws.utils.LargeDataSource;
+import org.openehealth.ipf.commons.ihe.xds.core.metadata.*;
+import org.openehealth.ipf.commons.ihe.xds.core.requests.*;
+import org.openehealth.ipf.commons.ihe.xds.core.requests.query.*;
+import org.openehealth.ipf.commons.ihe.xds.core.responses.*;
+import org.openehealth.ipf.tutorials.xds.dto.XdsProvidedRegisterDTO;
+
+import javax.activation.DataHandler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import javax.activation.DataHandler;
-import org.openehealth.ipf.commons.ihe.ws.utils.LargeDataSource;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.Address;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.AssigningAuthority;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.Association;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.AssociationLabel;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.AssociationType;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.Author;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.AvailabilityStatus;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.CXiAssigningAuthority;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.Code;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.Document;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.DocumentAvailability;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.DocumentEntry;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.DocumentEntryType;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.Folder;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.Identifiable;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.LocalizedString;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.Name;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.ObjectReference;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.Organization;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.PatientInfo;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.Person;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.Recipient;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.ReferenceId;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.SubmissionSet;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.Telecom;
-import org.openehealth.ipf.commons.ihe.xds.core.metadata.XpnName;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.DocumentReference;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.ProvideAndRegisterDocumentSet;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.QueryRegistry;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.RegisterDocumentSet;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.RemoveDocuments;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.RemoveMetadata;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.RetrieveDocumentSet;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.RetrieveImagingDocumentSet;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.RetrieveSeries;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.RetrieveStudy;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.query.DocumentsQuery;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.query.FetchQuery;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.query.FindDispensesQuery;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.query.FindDocumentsByReferenceIdQuery;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.query.FindDocumentsForMultiplePatientsQuery;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.query.FindDocumentsQuery;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.query.FindFoldersForMultiplePatientsQuery;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.query.FindFoldersQuery;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.query.FindMedicationListQuery;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.query.FindPrescriptionsQuery;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.query.FindSubmissionSetsQuery;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.query.GetAllQuery;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.query.GetAssociationsQuery;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.query.GetDocumentsAndAssociationsQuery;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.query.GetDocumentsQuery;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.query.GetFolderAndContentsQuery;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.query.GetFoldersForDocumentQuery;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.query.GetFoldersQuery;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.query.GetRelatedDocumentsQuery;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.query.GetSubmissionSetAndContentsQuery;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.query.GetSubmissionSetsQuery;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.query.QueryList;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.query.QueryReturnType;
-import org.openehealth.ipf.commons.ihe.xds.core.responses.ErrorCode;
-import org.openehealth.ipf.commons.ihe.xds.core.responses.ErrorInfo;
-import org.openehealth.ipf.commons.ihe.xds.core.responses.QueryResponse;
-import org.openehealth.ipf.commons.ihe.xds.core.responses.Response;
-import org.openehealth.ipf.commons.ihe.xds.core.responses.RetrievedDocument;
-import org.openehealth.ipf.commons.ihe.xds.core.responses.RetrievedDocumentSet;
-import org.openehealth.ipf.commons.ihe.xds.core.responses.Severity;
-import org.openehealth.ipf.commons.ihe.xds.core.responses.Status;
-import org.openehealth.ipf.tutorials.xds.datasource.XmlDataSource;
-import org.openehealth.ipf.tutorials.xds.dto.XdsProvidedRegisterDTO;
 
 /**
  * @author bovane bovane.ch@gmial.com
@@ -169,11 +106,11 @@ public abstract class CreateHelper {
         // 创建DocumentEntry
         DocumentEntry docEntry = createDocumentEntry(patientID, xdsProvidedRegisterDTO);
         // 创建文件夹
-//        Folder folder = createFolder(patientID, xdsProvidedRegisterDTO);
+        Folder folder = createFolder(patientID, xdsProvidedRegisterDTO);
         // 创建关联关系
-//        Association docAssociation = createAssociationDocEntryToSubmissionSet(xdsProvidedRegisterDTO);
-//        Association folderAssociation = createAssociationFolderToSubmissionSet(xdsProvidedRegisterDTO);
-//        Association docFolderAssociation = createAssociationDocEntryToFolder(xdsProvidedRegisterDTO);
+        Association docAssociation = createAssociationDocEntryToSubmissionSet(xdsProvidedRegisterDTO);
+        Association folderAssociation = createAssociationFolderToSubmissionSet(xdsProvidedRegisterDTO);
+        Association docFolderAssociation = createAssociationDocEntryToFolder(xdsProvidedRegisterDTO);
         // 创建 DataHandler,即传输文档内容, content 的内容来自 DataHandler
         DataHandler dataHandler = createDataHandler();
         Document doc = new Document(docEntry, dataHandler);
@@ -182,10 +119,10 @@ public abstract class CreateHelper {
         ProvideAndRegisterDocumentSet request = new ProvideAndRegisterDocumentSet();
         request.setSubmissionSet(submissionSet);
         request.getDocuments().add(doc);
-//        request.getFolders().add(folder);
-//        request.getAssociations().add(docAssociation);
-//        request.getAssociations().add(folderAssociation);
-//        request.getAssociations().add(docFolderAssociation);
+        request.getFolders().add(folder);
+        request.getAssociations().add(docAssociation);
+        request.getAssociations().add(folderAssociation);
+        request.getAssociations().add(docFolderAssociation);
         request.setTargetHomeCommunityId("urn:oid:1.2.3.4.5.6.2333.23");
         return request;
     }

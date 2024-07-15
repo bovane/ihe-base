@@ -22,6 +22,8 @@ import org.openehealth.ipf.commons.ihe.xds.core.responses.QueryResponse;
 import org.openehealth.ipf.commons.ihe.xds.core.responses.Response;
 import org.openehealth.ipf.commons.ihe.xds.core.responses.RetrievedDocumentSet;
 import org.openehealth.ipf.platform.camel.core.util.Exchanges;
+import org.openehealth.ipf.platform.camel.ihe.xds.core.converters.EbXML30Converters;
+import org.openehealth.ipf.platform.camel.ihe.xds.core.converters.XdsRenderingUtils;
 import org.openehealth.ipf.tutorials.xds.ContentUtils;
 import org.openehealth.ipf.tutorials.xds.CreateHelper;
 import org.openehealth.ipf.tutorials.xds.datasource.XmlDataSource;
@@ -79,9 +81,6 @@ public class XdsClientServiceImpl implements XdsClientService {
         Identifiable patientId = documentEntry.getPatientId();
         patientId.setId(UUID.randomUUID().toString());
         log.warn(patientId.getId());
-        // 设置文档唯一ID
-//        documentEntry.setUniqueId("4.3.2.1");
-
 
         // 计算文档的Hash 和 Size
         // 一个Document对象是 由 DocumentEntry 对象以及一个DataHandler对象
@@ -159,6 +158,10 @@ public class XdsClientServiceImpl implements XdsClientService {
             throw exception;
         }
         QueryResponse queryResponse = exchange.getMessage().getMandatoryBody(QueryResponse.class);
+
+        log.warn("查询的响应为: ");
+        var queryEbXml = EbXML30Converters.convert(queryResponse);
+        log.info(XdsRenderingUtils.renderEbxml(queryEbXml));
 
         // 查看查询返回结果
         log.warn(queryResponse.toString());
