@@ -86,7 +86,7 @@ public class XdsProvidedRegisterDTO {
 
 
     private String document;
-    private String filePath;
-    private String contentType;
-    private String name;
+    private String filePath = "/Users/bovane/Documents/hos-app/logs/test.txt";
+    private String contentType = "test/plain";
+    private String name = "testText";
 }

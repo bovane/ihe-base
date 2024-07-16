@@ -54,11 +54,11 @@ class DataStore {
          log.warn("当前data handler里面存的文件类型是: " + document.getDataHandler().getContentType())
          log.warn("当前data handler里面存的文件名称是: " + document.getDataHandler().getName())
 
-         def data= document.getDataHandler().getInputStream();
-         log.warn(IOUtils.toString(data))
+//         def data= document.getDataHandler().getInputStream();
+//         log.warn(IOUtils.toString(data))
          def uniqueId = document.documentEntry.uniqueId
          def contents = ContentUtils.getContent(document.getContent(DataHandler))
-         log.info("文档的内容是: " + IOUtils.toString(contents))
+//         log.info("文档的内容是: " + IOUtils.toString(contents))
          documents.put(uniqueId, contents)
          log.warn("Stored document: " + uniqueId)
      }

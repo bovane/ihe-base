@@ -3,6 +3,8 @@ package org.openehealth.ipf.tutorials.xds.service;
 import org.apache.camel.InvalidPayloadException;
 import org.openehealth.ipf.tutorials.xds.dto.XdsProvidedRegisterDTO;
 
+import java.io.IOException;
+
 /**
  * @author bovane bovane.ch@gmial.com
  * @create 2024/7/15
@@ -10,7 +12,7 @@ import org.openehealth.ipf.tutorials.xds.dto.XdsProvidedRegisterDTO;
 public interface IheClientService {
     void iti4142JustSingleDocument(XdsProvidedRegisterDTO xdsProvidedRegisterDTO) throws Exception;
 
-    void iti4142MultipleDocument(XdsProvidedRegisterDTO xdsProvidedRegisterDTO);
+    void iti4142MultipleDocument(XdsProvidedRegisterDTO xdsProvidedRegisterDTO) throws Exception;
 
     void iti4142AssociationDocument(XdsProvidedRegisterDTO xdsProvidedRegisterDTO);
 

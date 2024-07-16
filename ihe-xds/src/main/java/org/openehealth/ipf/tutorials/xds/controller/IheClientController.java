@@ -28,7 +28,7 @@ public class IheClientController {
     }
 
     @PostMapping(value = "iti41-42/multiple", consumes = "application/json")
-    public ResponseResult iti4142ProvidedAndRegisterMultiple(@RequestBody XdsProvidedRegisterDTO xdsProvidedRegisterDTO) {
+    public ResponseResult iti4142ProvidedAndRegisterMultiple(@RequestBody XdsProvidedRegisterDTO xdsProvidedRegisterDTO) throws Exception {
         this.iheClientService.iti4142MultipleDocument(xdsProvidedRegisterDTO);
         return ResponseResult.success();
     }

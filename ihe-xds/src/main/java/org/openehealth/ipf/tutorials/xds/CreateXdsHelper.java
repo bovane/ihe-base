@@ -2,18 +2,15 @@ package org.openehealth.ipf.tutorials.xds;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.openehealth.ipf.commons.ihe.xds.core.metadata.*;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.DocumentReference;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.ProvideAndRegisterDocumentSet;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.QueryRegistry;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.RetrieveDocumentSet;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.query.DocumentsQuery;
+import org.openehealth.ipf.commons.ihe.xds.core.requests.*;
 import org.openehealth.ipf.commons.ihe.xds.core.requests.query.FindDocumentsQuery;
-import org.openehealth.ipf.commons.ihe.xds.core.requests.query.QueryList;
 import org.openehealth.ipf.tutorials.xds.datasource.PdfDataSource;
 import org.openehealth.ipf.tutorials.xds.dto.XdsProvidedRegisterDTO;
 
 import javax.activation.DataHandler;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -25,6 +22,14 @@ import java.util.Collections;
 @Slf4j
 public abstract class CreateXdsHelper {
 
+    /**
+     * 只创建文档和提交集合
+     * 会有 document 和 提交集之间的Association
+     *
+     * @author bovane
+     * [xdsProvidedRegisterDTO]
+     * @return org.openehealth.ipf.commons.ihe.xds.core.requests.ProvideAndRegisterDocumentSet
+     */
     public static ProvideAndRegisterDocumentSet createDocumentOnly(XdsProvidedRegisterDTO xdsProvidedRegisterDTO) {
         // 创建患者标识信息
         Identifiable patientID = new Identifiable(xdsProvidedRegisterDTO.getPatientId(), new AssigningAuthority(xdsProvidedRegisterDTO.getAssigningAuthorityId()));
@@ -51,10 +56,57 @@ public abstract class CreateXdsHelper {
         // 可以包含各种类型的数据,比如文件、二进制数据等。
         // 在 Apache Camel 中, DataHandler 通常用于在消息交换过程中传输附件或二进制数据。
         // getContent() 方法返回的是原始的数据对象,可能是 InputStream、byte[] 或其他类型
-        docEntry.setHash(String.valueOf(ContentUtils.sha1(request.getDocuments().get(0).getContent(DataHandler.class))));
-        docEntry.setSize(Long.valueOf(String.valueOf(ContentUtils.size(request.getDocuments().get(0).getContent(DataHandler.class)))));
+        request.getDocuments().get(0).getDocumentEntry().setHash(String.valueOf(ContentUtils.sha1(request.getDocuments().get(0).getContent(DataHandler.class))));
+        request.getDocuments().get(0).getDocumentEntry().setSize(Long.valueOf(String.valueOf(ContentUtils.size(request.getDocuments().get(0).getContent(DataHandler.class)))));
         return request;
     }
+
+
+    /**
+     * 只创建文档和提交集合
+     * 会有 document 和 提交集之间的Association
+     *
+     * @author bovane
+     * [xdsProvidedRegisterDTO]
+     * @return org.openehealth.ipf.commons.ihe.xds.core.requests.ProvideAndRegisterDocumentSet
+     */
+    public static ProvideAndRegisterDocumentSet createThreeDocumentOnly(XdsProvidedRegisterDTO xdsProvidedRegisterDTO) throws IOException {
+        ProvideAndRegisterDocumentSet provide = CreateXdsHelper.createDocumentOnly(xdsProvidedRegisterDTO);
+        // 现在再添加两个文档,还需要添加text 和 PDF文档
+        Identifiable patientID = provide.getSubmissionSet().getPatientId();
+
+        // 创建DocumentEntry, 这里重新创建一个 XdsProvidedRegisterDTO 对象,即用默认值
+        XdsProvidedRegisterDTO xdsProvidedRegisterDTOText = new XdsProvidedRegisterDTO();
+        // 这里假设是两个文档属于同一个患者
+        DocumentEntry docEntry = createDocumentEntry(patientID, xdsProvidedRegisterDTOText);
+
+        // 设置DataHandler,即文档的内容,这里是txt文档
+        DataHandler dataHandler = new DataHandler(new PdfDataSource(xdsProvidedRegisterDTOText.getFilePath(), xdsProvidedRegisterDTOText.getContentType() ,xdsProvidedRegisterDTOText.getName()));
+        Document second = new Document(docEntry, dataHandler);
+        provide.getDocuments().add(second);
+        // 设置第二个文档的hash 和 size
+        provide.getDocuments().get(1).getDocumentEntry().setHash(String.valueOf(ContentUtils.sha1(provide.getDocuments().get(1).getContent(DataHandler.class))));
+        provide.getDocuments().get(1).getDocumentEntry().setSize(Long.valueOf(String.valueOf(ContentUtils.size(provide.getDocuments().get(1).getContent(DataHandler.class)))));
+
+        // 测试第一个XML文档的值是否设置进去
+        log.error("测试第一个XML文档内容是否设置进去");
+        log.warn("Document 文档数量为: " + provide.getDocuments().size());
+        log.warn("Document 文档的UUID为: " + provide.getDocuments().get(0).getDocumentEntry().getEntryUuid());
+        log.warn("Document 文档的唯一ID为: " +provide.getDocuments().get(0).getDocumentEntry().getUniqueId());
+        log.warn("Document 文档的大小为:(size字符大小) " + provide.getDocuments().get(0).getDocumentEntry().getSize());
+        log.warn("第一个文档文档的内容为: " + IOUtils.toString(provide.getDocuments().get(0).getDataHandler().getInputStream()));
+
+        // 测试第二个Text文档的值是否设置进去
+        log.error("测试第二个Text文档内容是否设置进去");
+        log.warn("Document 文档数量为: " + provide.getDocuments().size());
+        log.warn("Document 文档的UUID为: " + provide.getDocuments().get(1).getDocumentEntry().getEntryUuid());
+        log.warn("Document 文档的唯一ID为: " +provide.getDocuments().get(1).getDocumentEntry().getUniqueId());
+        log.warn("Document 文档的大小为:(size字符大小) " + provide.getDocuments().get(1).getDocumentEntry().getSize());
+        log.warn("第二个文档文档的内容为: " + IOUtils.toString(provide.getDocuments().get(1).getDataHandler().getInputStream()));
+        return provide;
+    }
+
+
 
     public static SubmissionSet createSubmissionSet(Identifiable patientID, XdsProvidedRegisterDTO xdsProvidedRegisterDTO) {
         Recipient recipient = new Recipient();
@@ -130,7 +182,7 @@ public abstract class CreateXdsHelper {
         // 设置源患者信息
         docEntry.setSourcePatientId(new Identifiable("source", new AssigningAuthority("4.1")));
         docEntry.setSourcePatientInfo(patientInfo);
-        docEntry.setTitle(new LocalizedString("Document 01", "en-US", "UTF8"));
+        docEntry.setTitle(new LocalizedString(xdsProvidedRegisterDTO.getDocEntryUuid(), "en-US", "UTF8"));
         docEntry.setTypeCode(new Code("code6", new LocalizedString("code6"), "scheme6"));
 
         docEntry.setUniqueId(xdsProvidedRegisterDTO.getDocEntryUniqueId());
@@ -163,6 +215,88 @@ public abstract class CreateXdsHelper {
         request.getDocuments().add(documentReference);
         return request;
     }
+
+    /**
+     * 进行文档注册,即保存元数据,
+     *
+     * @author bovane
+     * [xdsProvidedRegisterDTO]
+     * @return org.openehealth.ipf.commons.ihe.xds.core.requests.RegisterDocumentSet
+     */
+    public static RegisterDocumentSet createRegisterDocumentSet(XdsProvidedRegisterDTO xdsProvidedRegisterDTO) {
+        // 创建患者标识信息
+        Identifiable patientID = new Identifiable(xdsProvidedRegisterDTO.getPatientId(), new AssigningAuthority(xdsProvidedRegisterDTO.getAssigningAuthorityId()));
+
+        // 创建提交集合
+        SubmissionSet submissionSet = createSubmissionSet(patientID,xdsProvidedRegisterDTO);
+
+        // 创建文档元的一些信息
+        DocumentEntry docEntry = createDocumentEntry(patientID,xdsProvidedRegisterDTO);
+
+        // 创建文件夹
+        Folder folder = createFolder(patientID, xdsProvidedRegisterDTO);
+
+        // 创建联系
+        Association docAssociation = createAssociationDocEntryToSubmissionSet(xdsProvidedRegisterDTO);
+        Association folderAssociation = createAssociationFolderToSubmissionSet(xdsProvidedRegisterDTO);
+        Association docFolderAssociation = createAssociationDocEntryToFolder(xdsProvidedRegisterDTO);
+
+        // 组装RegisterDocumentSet
+        RegisterDocumentSet request = new RegisterDocumentSet();
+        request.setSubmissionSet(submissionSet);
+        request.getDocumentEntries().add(docEntry);
+        request.getFolders().add(folder);
+        request.getAssociations().add(docAssociation);
+        request.getAssociations().add(folderAssociation);
+        request.getAssociations().add(docFolderAssociation);
+        return request;
+    }
+
+
+
+    private static Association createAssociationDocEntryToFolder(XdsProvidedRegisterDTO xdsProvidedRegisterDTO) {
+        Association docFolderAssociation = new Association();
+        docFolderAssociation.setAssociationType(AssociationType.HAS_MEMBER);
+        docFolderAssociation.setSourceUuid(xdsProvidedRegisterDTO.getFolderDocEntrySourceUuid());
+        docFolderAssociation.setTargetUuid(xdsProvidedRegisterDTO.getFolderDocEntryTargetUuid());
+        docFolderAssociation.setEntryUuid(xdsProvidedRegisterDTO.getFolderDocEntryAssUuid());
+        return docFolderAssociation;
+    }
+
+    private static Association createAssociationFolderToSubmissionSet(XdsProvidedRegisterDTO xdsProvidedRegisterDTO) {
+        Association folderAssociation = new Association();
+        folderAssociation.setAssociationType(AssociationType.HAS_MEMBER);
+        folderAssociation.setSourceUuid(xdsProvidedRegisterDTO.getFolderSourceUuid());
+        folderAssociation.setTargetUuid(xdsProvidedRegisterDTO.getFolderTargetUuid());
+        folderAssociation.setEntryUuid(xdsProvidedRegisterDTO.getFolderAssUuid());
+        folderAssociation.setPreviousVersion("110");
+        return folderAssociation;
+    }
+
+    private static Association createAssociationDocEntryToSubmissionSet(XdsProvidedRegisterDTO xdsProvidedRegisterDTO) {
+        Association docAssociation = new Association();
+        docAssociation.setAssociationType(AssociationType.HAS_MEMBER);
+        docAssociation.setSourceUuid(xdsProvidedRegisterDTO.getDocEntrySourceUuid());
+        docAssociation.setTargetUuid(xdsProvidedRegisterDTO.getDocEntryTargetUuid());
+        docAssociation.setLabel(AssociationLabel.ORIGINAL);
+        docAssociation.setEntryUuid(xdsProvidedRegisterDTO.getDocEntryAssUuid());
+        docAssociation.setPreviousVersion("111");
+        return docAssociation;
+    }
+
+    public static Folder createFolder(Identifiable patientID, XdsProvidedRegisterDTO xdsProvidedRegisterDTO) {
+        Folder folder = new Folder();
+        folder.setAvailabilityStatus(AvailabilityStatus.APPROVED);
+        folder.getCodeList().add(new Code("code7", new LocalizedString("code7"), "scheme7"));
+        folder.setComments(new LocalizedString("comments3"));
+        folder.setEntryUuid(xdsProvidedRegisterDTO.getFolderUuid());
+        folder.setLastUpdateTime("19820910121315");
+        folder.setPatientId(patientID);
+        folder.setTitle(new LocalizedString(xdsProvidedRegisterDTO.getFolderUuid(), "en-US", "UTF8"));
+        folder.setUniqueId(xdsProvidedRegisterDTO.getFolderUniqueId());
+        return folder;
+    }
+
 
 
 }
