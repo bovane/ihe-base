@@ -50,6 +50,10 @@ public abstract class CreateXdsHelper {
         request.getDocuments().add(doc);
         request.setTargetHomeCommunityId("urn:oid:1.2.3.4.5.6.2333.23");
 
+        Association association = new Association();
+        association.setAssociationType(AssociationType.SUBMIT_ASSOCIATION);
+        request.getAssociations().add(association);
+
         // 计算文档的Hash 和 Size
         // 一个Document对象是 由 DocumentEntry 对象以及一个DataHandler对象
         // 在 Apache Camel 中, DataHandler 是一个非常重要的概念,它代表了一个通用的数据容器,
