@@ -215,7 +215,8 @@ public class IheClientServiceImpl implements IheClientService {
         // 查看第二个Text附件中的内容 (即文档内容)
 
         // 设置取文档的查询体
-        RetrieveDocumentSet retrieveDocumentSet1 = CreateXdsHelper.createRetrieveDocumentSet(xdsProvidedRegisterDTO);
+        XdsProvidedRegisterDTO xdsProvidedRegisterDTOText = new XdsProvidedRegisterDTO();
+        RetrieveDocumentSet retrieveDocumentSet1 = CreateXdsHelper.createRetrieveDocumentSet(xdsProvidedRegisterDTOText);
 
         // 发送请求
         exchange.getIn().setBody(retrieveDocumentSet1);
