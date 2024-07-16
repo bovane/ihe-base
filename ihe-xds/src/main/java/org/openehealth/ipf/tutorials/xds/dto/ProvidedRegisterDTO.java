@@ -3,6 +3,7 @@ package org.openehealth.ipf.tutorials.xds.dto;
 import lombok.Data;
 
 /**
+ * ITI41和42事务 文档提交和注册的所需参数 对应的实体为 ProvideAndRegisterDocumentSet
  * @author bovane bovane.ch@gmial.com
  * @create 2024/7/16
  */
