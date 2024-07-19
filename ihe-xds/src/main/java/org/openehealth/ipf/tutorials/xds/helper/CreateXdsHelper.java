@@ -1,4 +1,4 @@
-package org.openehealth.ipf.tutorials.xds;
+package org.openehealth.ipf.tutorials.xds.helper;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -6,6 +6,7 @@ import org.apache.commons.io.IOUtils;
 import org.openehealth.ipf.commons.ihe.xds.core.metadata.*;
 import org.openehealth.ipf.commons.ihe.xds.core.requests.*;
 import org.openehealth.ipf.commons.ihe.xds.core.requests.query.FindDocumentsQuery;
+import org.openehealth.ipf.tutorials.xds.ContentUtils;
 import org.openehealth.ipf.tutorials.xds.datasource.PdfDataSource;
 import org.openehealth.ipf.tutorials.xds.dto.XdsProvidedRegisterDTO;
 

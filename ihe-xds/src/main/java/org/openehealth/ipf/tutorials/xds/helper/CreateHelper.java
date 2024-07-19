@@ -1,4 +1,4 @@
-package org.openehealth.ipf.tutorials.xds;
+package org.openehealth.ipf.tutorials.xds.helper;
 
 import lombok.Data;
 import org.openehealth.ipf.commons.ihe.ws.utils.LargeDataSource;

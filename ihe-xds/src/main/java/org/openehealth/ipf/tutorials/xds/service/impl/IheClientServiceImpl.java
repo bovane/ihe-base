@@ -15,12 +15,11 @@ import org.openehealth.ipf.commons.ihe.xds.core.responses.RetrievedDocumentSet;
 import org.openehealth.ipf.platform.camel.core.util.Exchanges;
 import org.openehealth.ipf.platform.camel.ihe.xds.core.converters.EbXML30Converters;
 import org.openehealth.ipf.platform.camel.ihe.xds.core.converters.XdsRenderingUtils;
-import org.openehealth.ipf.tutorials.xds.CreateXdsHelper;
+import org.openehealth.ipf.tutorials.xds.helper.CreateXdsHelper;
 import org.openehealth.ipf.tutorials.xds.dto.XdsProvidedRegisterDTO;
 import org.openehealth.ipf.tutorials.xds.service.IheClientService;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 /**
