@@ -90,7 +90,7 @@ public class ProvidedRegisterDTO {
     @ApiModelProperty(value = "提交集的Title")
     private String submissionTitle = "Submission Set 01";
     @ApiModelProperty(value = "提交集语言")
-    private String submissionTang = "en-US";
+    private String submissionLang = "en-US";
     @ApiModelProperty(value = "提交集字符集")
     private String submissionCharset = "UTF-8";
 
@@ -128,6 +128,11 @@ public class ProvidedRegisterDTO {
     private String docPatientGender = "M";
     @ApiModelProperty(value = "文档源患者名称")
     private String docPatientName = "Susi";
+    @ApiModelProperty(value = "Source患者ID")
+    private String docSourcePatientId = "source";
+    @ApiModelProperty(value = "Source患者ID的分配机构的ID")
+    private String docSourcePatientIdAssigningAuthorityId = "4.1";
+
 
     // 添加DocEntry 其它元信息;如文档分类级别等代码 这些不太重要,创建时保持默认即可
     @ApiModelProperty(value = "文档分类级别代码")
@@ -136,6 +141,29 @@ public class ProvidedRegisterDTO {
     private String docClassDisplayName = "code2";
     @ApiModelProperty(value = "文档分类级别主题")
     private String docClassSchemeName = "scheme2";
+
+    @ApiModelProperty(value = "文档保密级别代码")
+    private String docConfidentialityCode = "code8";
+    @ApiModelProperty(value = "文档保密级别名称")
+    private String docConfidentialityDisplayName = "code8";
+    @ApiModelProperty(value = "文档保密级别主题")
+    private String docConfidentialitySchemeName = "scheme8";
+
+    @ApiModelProperty(value = "文档事件代码")
+    private String docEventCode = "code9";
+    @ApiModelProperty(value = "文档事件名称")
+    private String docEventDisplayName = "code9";
+    @ApiModelProperty(value = "文档事件主题")
+    private String docEventSchemeName = "scheme9";
+
+    @ApiModelProperty(value = "文档格式代码")
+    private String docFormatCode = "code3";
+    @ApiModelProperty(value = "文档格式名称")
+    private String docFormatDisplayName = "code3";
+    @ApiModelProperty(value = "文档格式主题")
+    private String docFormatSchemeName = "scheme3";
+
+
 
     // 添加DocEntry 关键元信息
     @ApiModelProperty(value = "文档备注")
@@ -216,22 +244,22 @@ public class ProvidedRegisterDTO {
      * 创建文档 Entry 与 SubmissionSet 之间的联系 HasMember 类型
      * */
     @ApiModelProperty(value = "文档提交集源UUID-为提交集的UUID")
-    private String docEntrySourceUuid = "submissionSet01";
+    private String docEntrySubmissionSetSourceUuid = "submissionSet01";
     @ApiModelProperty(value = "文档提交集目的UUID-为文档的UUID")
-    private String docEntryTargetUuid = "document01";
+    private String docEntrySubmissionSetTargetUuid = "document01";
     @ApiModelProperty(value = "文档-提交集关联的UUID")
-    private String docEntryAssUuid = "docAss";
+    private String docEntrySubmissionSetAssUuid = "docAss";
 
     /**
      * 创建联系 createAssociationFolderToSubmissionSet
      * 创建文件夹 Folder 与 SubmissionSet 之间的联系 HasMember 类型
      * */
     @ApiModelProperty(value = "文件夹提交集源UUID-为提交集的UUID")
-    private String folderSourceUuid = "submissionSet01";
+    private String folderSubmissionSetSourceUuid = "submissionSet01";
     @ApiModelProperty(value = "文件夹提交集目的UUID-为文件夹UUID")
-    private String folderTargetUuid = "folder01";
+    private String folderSubmissionSetTargetUuid = "folder01";
     @ApiModelProperty(value = "文件夹-提交集关联的UUID")
-    private String folderAssUuid = "folderAss";
+    private String folderSubmissionSetAssUuid = "folderAss";
 
     /**
      * 创建联系 createAssociationDocEntryToFolder
@@ -243,5 +271,15 @@ public class ProvidedRegisterDTO {
     private String folderDocEntryTargetUuid = "document01";
     @ApiModelProperty(value = "文档-文件夹关联的UUID")
     private String folderDocEntryAssUuid = "docFolderAss";
+
+    /**
+     * 文件内容 —— 文件相关信息
+     */
+    @ApiModelProperty(value = "文件路径")
+    private String filePath = "/Users/bovane/Documents/hos-app/logs/test.txt";
+    @ApiModelProperty(value = "contentType必须要符合标准")
+    private String contentType = "test/plain";
+    @ApiModelProperty(value = "文件流名称")
+    private String name = "testText";
 
 }
