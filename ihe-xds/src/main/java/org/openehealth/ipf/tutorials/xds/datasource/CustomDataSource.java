@@ -3,7 +3,6 @@ package org.openehealth.ipf.tutorials.xds.datasource;
 import cn.hutool.core.io.FileUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.junit.jupiter.api.Assertions;
 
 import javax.activation.DataSource;
 import java.io.IOException;
@@ -11,12 +10,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * Data source used in tests to provide a large content stream.
- * @author Jens Riemschneider
+ * 通过加载本地文件作为文档内容.将本地文件作为流读取
+ * @author bovane
  */
 @Data
 @AllArgsConstructor
-public class PdfDataSource implements DataSource {
+public class CustomDataSource implements DataSource {
     /** Content stream size for tests with large content. Must be larger than 64K to ensure
      * CXF does use MTOM. */
     private String filePath;

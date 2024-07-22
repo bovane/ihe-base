@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.openehealth.ipf.commons.ihe.xds.core.requests.DocumentReference;
 import org.openehealth.ipf.commons.ihe.xds.core.requests.RetrieveDocumentSet;
 import org.openehealth.ipf.tutorials.xds.dto.RetrieveDTO;
-import org.openehealth.ipf.tutorials.xds.dto.XdsProvidedRegisterDTO;
 
 /**
  * @author bovane bovane.ch@gmial.com

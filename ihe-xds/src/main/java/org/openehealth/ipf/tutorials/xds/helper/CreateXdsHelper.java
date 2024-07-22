@@ -7,7 +7,7 @@ import org.openehealth.ipf.commons.ihe.xds.core.metadata.*;
 import org.openehealth.ipf.commons.ihe.xds.core.requests.*;
 import org.openehealth.ipf.commons.ihe.xds.core.requests.query.FindDocumentsQuery;
 import org.openehealth.ipf.tutorials.xds.ContentUtils;
-import org.openehealth.ipf.tutorials.xds.datasource.PdfDataSource;
+import org.openehealth.ipf.tutorials.xds.datasource.CustomDataSource;
 import org.openehealth.ipf.tutorials.xds.dto.XdsProvidedRegisterDTO;
 
 import javax.activation.DataHandler;
@@ -42,7 +42,7 @@ public abstract class CreateXdsHelper {
         DocumentEntry docEntry = createDocumentEntry(patientID, xdsProvidedRegisterDTO);
 
         // 设置DataHandler,即文档的内容
-        DataHandler dataHandler = new DataHandler(new PdfDataSource(xdsProvidedRegisterDTO.getFilePath(), xdsProvidedRegisterDTO.getContentType() ,xdsProvidedRegisterDTO.getName()));
+        DataHandler dataHandler = new DataHandler(new CustomDataSource(xdsProvidedRegisterDTO.getFilePath(), xdsProvidedRegisterDTO.getContentType() ,xdsProvidedRegisterDTO.getName()));
         Document doc = new Document(docEntry, dataHandler);
 
         // 组装ProvideAndRegisterDocumentSet
@@ -86,7 +86,7 @@ public abstract class CreateXdsHelper {
         DocumentEntry docEntry = createDocumentEntry(patientID, xdsProvidedRegisterDTOText);
 
         // 设置DataHandler,即文档的内容,这里是txt文档
-        DataHandler dataHandler = new DataHandler(new PdfDataSource(xdsProvidedRegisterDTOText.getFilePath(), xdsProvidedRegisterDTOText.getContentType() ,xdsProvidedRegisterDTOText.getName()));
+        DataHandler dataHandler = new DataHandler(new CustomDataSource(xdsProvidedRegisterDTOText.getFilePath(), xdsProvidedRegisterDTOText.getContentType() ,xdsProvidedRegisterDTOText.getName()));
         Document second = new Document(docEntry, dataHandler);
         provide.getDocuments().add(second);
         // 设置第二个文档的hash 和 size
