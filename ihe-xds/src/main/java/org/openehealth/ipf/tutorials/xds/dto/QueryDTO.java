@@ -33,13 +33,13 @@ public class QueryDTO {
     private String patAssigningAuthorityId = "1.3.6.1.4.1.21367.2005.13.20.1000";
 
     @ApiModelProperty(value = "查询HomeCommunityId")
-    private String queryHomeCommunityId = "";
+    private String queryHomeCommunityId = "12.21.41";
 
     @ApiModelProperty(value = "查询文档的状态")
     private String queryStatus = "Approved";
 
     @ApiModelProperty(value = "查询文档的类型")
-    private String queryDocumentEntryTypes = "stable";
+    private String queryDocumentEntryType = "stable";
 
     @ApiModelProperty(value = "文档元数据创建时间")
     private String documentEntryCreateTimeFrom = "";
@@ -70,8 +70,10 @@ public class QueryDTO {
     @ApiModelProperty(value = "文档作者")
     private String authorPerson = "";
 
-    @ApiModelProperty(value = "")
+    @ApiModelProperty(value = "格式代码")
     private String formatCode = "";
+
+
 
     /**
      * 查询提交集submissionSet 所需参数,主要通过患者ID等查 文档注册库
@@ -113,7 +115,6 @@ public class QueryDTO {
      * 获取 DocumentsAndAssociations
      * 复用,前面的HomeCommunityId
      */
-
     @ApiModelProperty(value = "文档Entry-UUID")
     private String documentEntryUuid = "";
 
@@ -124,14 +125,31 @@ public class QueryDTO {
      * 获取 submissionSet所需参数
      * 复用前面的 前面的HomeCommunityId
      */
-    @ApiModelProperty(value = "")
+    @ApiModelProperty(value = "提交集UUID")
     private String submissionSetUuid;
 
     /**
      * GetFolderAndContents所需参数
+     * 复用前面的formatCode、confidentialityCode等代码
+     */
+    @ApiModelProperty(value = "文件夹UUID")
+    private String folderEntryUuid = "";
+
+    @ApiModelProperty(value = "文件夹唯一ID")
+    private String folderEntryUniqueId = "";
+
+    @ApiModelProperty(value = "文档类型")
+    private String documentEntryType = "";
+
+    /**
+     * getFoldersForDocument所需参数
+     * 复用前面的documentEntryUuid等代码
      */
 
-
+    /**
+     * getAllQuery所需参数
+     * 复用前面的参数
+     */
 
 
 }

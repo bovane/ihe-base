@@ -24,10 +24,10 @@ public abstract class Iti18QueryHelper {
      * @author bovane
      * @return org.openehealth.ipf.commons.ihe.xds.core.requests.QueryRegistry
      */
-    public static QueryRegistry createFindDocumentsQuery() {
+    public static QueryRegistry createFindDocumentsQuery(QueryDTO queryDTO) {
         FindDocumentsQuery query = new FindDocumentsQuery();
-        populateDocumentsQuery(query);
-        query.setPatientId(new Identifiable("id3", new AssigningAuthority("1.3")));
+        populateDocumentsQuery(query,queryDTO);
+        query.setPatientId(new Identifiable(queryDTO.getPatientId(), new AssigningAuthority(queryDTO.getPatAssigningAuthorityId())));
         query.setStatus(Arrays.asList(AvailabilityStatus.APPROVED, AvailabilityStatus.SUBMITTED));
         query.setDocumentEntryTypes(Collections.singletonList(DocumentEntryType.STABLE));
         query.setDocumentAvailability(Collections.singletonList(DocumentAvailability.ONLINE));
@@ -42,8 +42,8 @@ public abstract class Iti18QueryHelper {
      * [query]
      * @return void
      */
-    private static void populateDocumentsQuery(DocumentsQuery query) {
-        query.setHomeCommunityId("12.21.41");
+    private static void populateDocumentsQuery(DocumentsQuery query, QueryDTO queryDTO) {
+        query.setHomeCommunityId(query.getHomeCommunityId());
         query.setClassCodes(Arrays.asList(new Code("code1", (LocalizedString)null, "scheme1"), new Code("code2", (LocalizedString)null, "scheme2")));
         query.setTypeCodes(Arrays.asList(new Code("codet1", (LocalizedString)null, "schemet1"), new Code("codet2", (LocalizedString)null, "schemet2")));
         query.setPracticeSettingCodes(Arrays.asList(new Code("code3", (LocalizedString)null, "scheme3"), new Code("code4", (LocalizedString)null, "scheme4")));
@@ -175,6 +175,47 @@ public abstract class Iti18QueryHelper {
         return new QueryRegistry(query);
     }
 
+    /***
+     * 创建获取文件夹和文档的查询实体
+     *
+     * @author bovane
+     * [queryDTO]
+     * @return org.openehealth.ipf.commons.ihe.xds.core.requests.QueryRegistry
+     */
+    public static QueryRegistry createGetFoldersForDocumentQuery(QueryDTO queryDTO) {
+        GetFoldersForDocumentQuery query = new GetFoldersForDocumentQuery();
+        query.setHomeCommunityId("12.21.41");
+        query.setUuid("urn:uuid:1.2.3.4");
+        query.setUniqueId("12.21.34");
+        QueryList<Code> confidentialityCodes = new QueryList();
+        confidentialityCodes.getOuterList().add(Arrays.asList(new Code("code10", (LocalizedString)null, "scheme10"), new Code("code11", (LocalizedString)null, "scheme11")));
+        confidentialityCodes.getOuterList().add(Collections.singletonList(new Code("code12", (LocalizedString)null, "scheme12")));
+        return new QueryRegistry(query);
+    }
+
+
+    /***
+     * 获取全部元数据
+     *
+     * @author bovane
+     * [queryDTO]
+     * @return org.openehealth.ipf.commons.ihe.xds.core.requests.QueryRegistry
+     */
+    public static QueryRegistry createGetAllQuery(QueryDTO queryDTO) {
+        GetAllQuery query = new GetAllQuery();
+        query.setHomeCommunityId("12.21.41");
+        query.setPatientId(new Identifiable("id1", new AssigningAuthority("1.2")));
+        QueryList<Code> codes = new QueryList();
+        codes.getOuterList().add(Arrays.asList(new Code("code7", (LocalizedString)null, "scheme7"), new Code("code8", (LocalizedString)null, "scheme8")));
+        codes.getOuterList().add(Collections.singletonList(new Code("code9", (LocalizedString)null, "scheme9")));
+        query.setConfidentialityCodes(codes);
+        query.setFormatCodes(Arrays.asList(new Code("code1", (LocalizedString)null, "scheme1"), new Code("code2", (LocalizedString)null, "scheme2")));
+        query.setStatusDocuments(Arrays.asList(AvailabilityStatus.APPROVED, AvailabilityStatus.SUBMITTED));
+        query.setStatusFolders(Arrays.asList(AvailabilityStatus.APPROVED, AvailabilityStatus.SUBMITTED));
+        query.setStatusSubmissionSets(Arrays.asList(AvailabilityStatus.APPROVED, AvailabilityStatus.SUBMITTED));
+        query.setDocumentEntryTypes(Collections.singletonList(DocumentEntryType.STABLE));
+        return new QueryRegistry(query);
+    }
 
 
     /***
