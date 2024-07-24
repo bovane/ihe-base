@@ -57,8 +57,8 @@ public class IheClientServiceImpl implements IheClientService {
         // 发送请求
         exchange.getIn().setBody(provide);
         String iti41Endpoint = StrUtil.isNotEmpty(xdsProvidedRegisterDTO.getIti41EndpointUrl()) ? xdsProvidedRegisterDTO.getIti41EndpointUrl() : "xds-iti41://localhost:9091/services/xds-iti41";
-        log.error("完整的的请求体为: ");
-        log.info(XdsRenderingUtils.render(exchange));
+//        log.error("完整的的请求体为: ");
+//        log.info(XdsRenderingUtils.render(exchange));
 
         // 发送到 entry point iti41
         exchange = producerTemplate.send(iti41Endpoint, exchange);

@@ -242,6 +242,8 @@ public class ProvidedRegisterDTO {
     /**
      * 创建联系 createAssociationDocEntryToSubmissionSet
      * 创建文档 Entry 与 SubmissionSet 之间的联系 HasMember 类型
+     * sourceId —— 表示发起提交的文档或 SubmissionSet 的唯一标识符
+     * targetId —— 表示被提交的文档的唯一标识符
      * */
     @ApiModelProperty(value = "文档提交集源UUID-为提交集的UUID")
     private String docEntrySubmissionSetSourceUuid = "submissionSet01";
@@ -253,6 +255,8 @@ public class ProvidedRegisterDTO {
     /**
      * 创建联系 createAssociationFolderToSubmissionSet
      * 创建文件夹 Folder 与 SubmissionSet 之间的联系 HasMember 类型
+     * sourceId —— 表示发起提交的文档或 SubmissionSet 的唯一标识符
+     * targetId —— 表示被提交的文件夹的唯一标识符
      * */
     @ApiModelProperty(value = "文件夹提交集源UUID-为提交集的UUID")
     private String folderSubmissionSetSourceUuid = "submissionSet01";
@@ -264,6 +268,8 @@ public class ProvidedRegisterDTO {
     /**
      * 创建联系 createAssociationDocEntryToFolder
      * 创建文件夹 Folder 与 DocEntry 之间的联系 HasMember 类型
+     * sourceId —— 表示文件夹的唯一标识符
+     * targetId —— 表示被提交的文档的唯一标识符
      * */
     @ApiModelProperty(value = "文档文件夹源UUID-为文件夹UUID")
     private String folderDocEntrySourceUuid = "folder01";

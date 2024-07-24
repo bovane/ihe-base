@@ -8,6 +8,7 @@ import org.openehealth.ipf.commons.ihe.xds.core.requests.*;
 import org.openehealth.ipf.commons.ihe.xds.core.requests.query.FindDocumentsQuery;
 import org.openehealth.ipf.tutorials.xds.ContentUtils;
 import org.openehealth.ipf.tutorials.xds.datasource.CustomDataSource;
+import org.openehealth.ipf.tutorials.xds.dto.ProvidedRegisterDTO;
 import org.openehealth.ipf.tutorials.xds.dto.XdsProvidedRegisterDTO;
 
 import javax.activation.DataHandler;
@@ -51,9 +52,8 @@ public abstract class CreateXdsHelper {
         request.getDocuments().add(doc);
         request.setTargetHomeCommunityId("urn:oid:1.2.3.4.5.6.2333.23");
 
-        Association association = new Association();
-        association.setAssociationType(AssociationType.SUBMIT_ASSOCIATION);
-        request.getAssociations().add(association);
+//        Association association = createAssociationDocEntryToSubmissionSetSubmitAssociation(xdsProvidedRegisterDTO);
+//        request.getAssociations().add(association);
 
         // 计算文档的Hash 和 Size
         // 一个Document对象是 由 DocumentEntry 对象以及一个DataHandler对象
@@ -66,6 +66,17 @@ public abstract class CreateXdsHelper {
         return request;
     }
 
+    private static Association createAssociationDocEntryToSubmissionSetSubmitAssociation(XdsProvidedRegisterDTO xdsProvidedRegisterDTO) {
+        Association docAssociation = new Association();
+        docAssociation.setAssociationType(AssociationType.SUBMIT_ASSOCIATION);
+//        docAssociation.setAssociationType(AssociationType.HAS_MEMBER);
+        docAssociation.setSourceUuid(xdsProvidedRegisterDTO.getDocEntrySourceUuid());
+        docAssociation.setTargetUuid(xdsProvidedRegisterDTO.getDocEntryTargetUuid());
+        docAssociation.setLabel(AssociationLabel.ORIGINAL);
+        docAssociation.setEntryUuid(xdsProvidedRegisterDTO.getDocEntryAssUuid());
+        docAssociation.setPreviousVersion("111");
+        return docAssociation;
+    }
 
     /**
      * 只创建文档和提交集合

@@ -19,9 +19,9 @@ public class XDSApplication {
     public static void main(String[] args) {
         SpringApplication.run(XDSApplication.class, args);
     }
-//    @Bean
-//    public CommandLineRunner run(BeanPrinter beanPrinter) {
-//        return args -> beanPrinter.printAllBeans();
-//    }
+    @Bean
+    public CommandLineRunner run(BeanPrinter beanPrinter) {
+        return args -> beanPrinter.printAllBeans();
+    }
 
 }

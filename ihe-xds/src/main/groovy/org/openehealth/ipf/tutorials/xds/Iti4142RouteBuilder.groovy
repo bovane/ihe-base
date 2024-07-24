@@ -62,6 +62,8 @@ class Iti4142RouteBuilder extends RouteBuilder {
             .process(new Iti41Processor())
             // Validate and convert the request
             .process(iti41RequestValidator())
+            // 这段代码的作用是从消息交换中提取一个 ProvideAndRegisterDocumentSet 对象，
+            // 并将其与一个空的 UUID 映射一起封装到一个 Map 中，供后续处理使用。
             .transform().exchange ({exchange ->
                 [ 'req': exchange.in.getBody(ProvideAndRegisterDocumentSet.class), 'uuidMap': [:] ]} as Function)
             // Make the dataHandlers re-readable

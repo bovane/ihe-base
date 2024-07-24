@@ -63,7 +63,11 @@ public class Iti41Processor implements Processor {
 		// 使用Converter 将实体类转为 EB XML 实体类
 		var requestEbxml = EbXML30Converters.convert(request);
 
+		log.warn("接收到到请求体为: ");
+//		log.warn(XdsRenderingUtils.renderEbxml(requestEbxml));
+
 		SubmissionSet submissionSet = request.getSubmissionSet();
+		log.info("提交集合的UUID是: " + submissionSet.getEntryUuid());
 
 		List<Folder> folders = request.getFolders();
 		log.warn("folders的数量为:" + folders.size());
@@ -85,6 +89,7 @@ public class Iti41Processor implements Processor {
 		log.info("文档的数量为:" + documentList.size());
 		// 取到documentEntry
 		documentList.forEach(document -> {
+			log.info("文档Entry的UUID是: " +document.getDocumentEntry().getEntryUuid());
 			log.warn("文档的内容是:" + document.toString());
 			DataHandler dataHandler = document.getContent(DataHandler.class);
 			byte[] content = (byte[]) ContentUtils.getContent(dataHandler);
@@ -104,6 +109,9 @@ public class Iti41Processor implements Processor {
 		log.warn("Association的数量为: " + associations.size());
 		associations.forEach(association -> {
 			log.info("打印Association: " + association.toString());
+			log.info("打印Association的EntryUUID: " + association.getEntryUuid());
+			log.warn("Association的SourceId: "+ association.getSourceUuid());
+			log.warn("Association的TargetId: "+ association.getTargetUuid());
 		});
 
 		// 如果有Association 关系,那么将对应的关系存入数据库,存入数据库后 (元数据信息存入数据库)

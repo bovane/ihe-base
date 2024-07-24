@@ -2,14 +2,17 @@ package org.openehealth.ipf.tutorials.xds.helper;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.openehealth.ipf.commons.ihe.ws.utils.LargeDataSource;
+import org.apache.commons.io.IOUtils;
+import org.checkerframework.checker.units.qual.A;
 import org.openehealth.ipf.commons.ihe.xds.core.metadata.*;
 import org.openehealth.ipf.commons.ihe.xds.core.requests.ProvideAndRegisterDocumentSet;
 import org.openehealth.ipf.tutorials.xds.ContentUtils;
 import org.openehealth.ipf.tutorials.xds.datasource.CustomDataSource;
 import org.openehealth.ipf.tutorials.xds.dto.ProvidedRegisterDTO;
+import org.openehealth.ipf.tutorials.xds.dto.XdsProvidedRegisterDTO;
 
 import javax.activation.DataHandler;
+import java.io.IOException;
 
 /**
  * 用于创建Iti41客户端所需的实体类
@@ -115,23 +118,46 @@ public abstract class Iti41ProvidedRegisterHelper {
     }
 
     /***
-     * 创建DocEntry —— SubmissionSet 之间的Association
+     * 创建DocEntry —— SubmissionSet 之间的Association 表示HasMember关系
+     * sourceId —— 表示发起提交的文档或 SubmissionSet 的唯一标识符
+     * targetId —— 表示被提交的文档的唯一标识符
      * Source —— 提交集UUID
      * Target —— 文件EntryUUID
      * @author bovane
      * [ProvidedRegisterDTO]
      * @return org.openehealth.ipf.commons.ihe.xds.core.metadata.Association
      */
-    private static Association createAssociationDocEntryToSubmissionSet(ProvidedRegisterDTO ProvidedRegisterDTO) {
+    private static Association createAssociationDocEntryToSubmissionSet(ProvidedRegisterDTO providedRegisterDTO) {
         Association docAssociation = new Association();
         docAssociation.setAssociationType(AssociationType.HAS_MEMBER);
-        docAssociation.setSourceUuid(ProvidedRegisterDTO.getDocEntrySubmissionSetSourceUuid());
-        docAssociation.setTargetUuid(ProvidedRegisterDTO.getDocEntrySubmissionSetTargetUuid());
+        docAssociation.setSourceUuid(providedRegisterDTO.getDocEntrySubmissionSetSourceUuid());
+        docAssociation.setTargetUuid(providedRegisterDTO.getDocEntrySubmissionSetTargetUuid());
         docAssociation.setLabel(AssociationLabel.ORIGINAL);
-        docAssociation.setEntryUuid(ProvidedRegisterDTO.getDocEntrySubmissionSetAssUuid());
+        docAssociation.setEntryUuid(providedRegisterDTO.getDocEntrySubmissionSetAssUuid());
         docAssociation.setPreviousVersion("111");
         return docAssociation;
     }
+
+    /***
+     * 创建DocEntry —— SubmissionSet 之间的Association 表示SUBMIT_ASSOCIATION关系(侧重表提交关系)
+     * sourceId —— 表示发起提交的文档或 SubmissionSet 的唯一标识符
+     * targetId —— 表示被提交的文档的唯一标识符
+     * @author bovane
+     * [ProvidedRegisterDTO]
+     * @return org.openehealth.ipf.commons.ihe.xds.core.metadata.Association
+     */
+    private static Association createAssociationDocEntryToSubmissionSetSubmitAssociation(ProvidedRegisterDTO providedRegisterDTO) {
+        Association docAssociation = new Association();
+        docAssociation.setSourceUuid(providedRegisterDTO.getSubmissionSetEntryUuid());
+        docAssociation.setTargetUuid(providedRegisterDTO.getDocEntryUuid());
+        // (侧重表提交关系,即用SUBMIT_ASSOCIATION)
+        docAssociation.setAssociationType(AssociationType.SUBMIT_ASSOCIATION);
+        docAssociation.setLabel(AssociationLabel.ORIGINAL);
+        docAssociation.setEntryUuid(providedRegisterDTO.getDocEntrySubmissionSetAssUuid());
+        docAssociation.setPreviousVersion("111");
+        return docAssociation;
+    }
+
 
     /***
      * 创建文件夹信息
@@ -252,4 +278,98 @@ public abstract class Iti41ProvidedRegisterHelper {
         docEntry.getReferenceIdList().add(new ReferenceId("ref-id-2", new CXiAssigningAuthority("DEFG", "2.1.2.3", "ISO"), "vendor-defined"));
         return docEntry;
     }
+
+    // ====================== 创建符合测评要求的提供和注册集 ========================= //
+
+    /**
+     * 只创建文档和提交集合
+     * 会有 document 和 提交集之间的Association,他们的关系为 HasMember
+     *
+     * @author bovane
+     * [xdsProvidedRegisterDTO]
+     * @return org.openehealth.ipf.commons.ihe.xds.core.requests.ProvideAndRegisterDocumentSet
+     */
+    public static ProvideAndRegisterDocumentSet createDocumentOnly(ProvidedRegisterDTO providedRegisterDTO) {
+        // 创建患者标识信息
+        Identifiable patientID = new Identifiable(providedRegisterDTO.getPatientId(), new AssigningAuthority(providedRegisterDTO.getPatAssigningAuthorityId()));
+
+        // 创建提交集合信息
+        SubmissionSet submissionSet = createSubmissionSet(patientID, providedRegisterDTO);
+
+        // 创建DocumentEntry
+        DocumentEntry docEntry = createDocumentEntry(patientID, providedRegisterDTO);
+
+        // 设置DataHandler,即文档的内容
+        DataHandler dataHandler = createDataHandler(providedRegisterDTO);
+        Document doc = new Document(docEntry, dataHandler);
+
+        // 组装ProvideAndRegisterDocumentSet
+        ProvideAndRegisterDocumentSet request = new ProvideAndRegisterDocumentSet();
+        request.setSubmissionSet(submissionSet);
+        request.getDocuments().add(doc);
+        request.setTargetHomeCommunityId("urn:oid:1.2.3.4.5.6.2333.23");
+
+        // 创建 SUBMIT_ASSOCIATION,更强调文档与提交操作的关系
+        Association submitAssociation = createAssociationDocEntryToSubmissionSetSubmitAssociation(providedRegisterDTO);
+        request.getAssociations().add(submitAssociation);
+        // 创建 Submit docEntry 之间的 HasMember Association
+        Association hasMemberAssociation = createAssociationDocEntryToSubmissionSet(providedRegisterDTO);
+        request.getAssociations().add(hasMemberAssociation);
+
+        // 计算文档的Hash 和 Size
+        // 一个Document对象是 由 DocumentEntry 对象以及一个DataHandler对象
+        // 在 Apache Camel 中, DataHandler 是一个非常重要的概念,它代表了一个通用的数据容器,
+        // 可以包含各种类型的数据,比如文件、二进制数据等。
+        // 在 Apache Camel 中, DataHandler 通常用于在消息交换过程中传输附件或二进制数据。
+        // getContent() 方法返回的是原始的数据对象,可能是 InputStream、byte[] 或其他类型
+        request.getDocuments().get(0).getDocumentEntry().setHash(String.valueOf(ContentUtils.sha1(request.getDocuments().get(0).getContent(DataHandler.class))));
+        request.getDocuments().get(0).getDocumentEntry().setSize(Long.valueOf(String.valueOf(ContentUtils.size(request.getDocuments().get(0).getContent(DataHandler.class)))));
+        return request;
+    }
+
+    /**
+     * 只创建文档和提交集合
+     * 会有 document 和 提交集之间的Association
+     *
+     * @author bovane
+     * [xdsProvidedRegisterDTO]
+     * @return org.openehealth.ipf.commons.ihe.xds.core.requests.ProvideAndRegisterDocumentSet
+     */
+    public static ProvideAndRegisterDocumentSet createThreeDocument(ProvidedRegisterDTO providedRegisterDTO) throws IOException {
+        ProvideAndRegisterDocumentSet provide = createDocumentOnly(providedRegisterDTO);
+        // 现在再添加两个文档,还需要添加text 和 PDF文档
+        Identifiable patientID = provide.getSubmissionSet().getPatientId();
+
+        // 创建DocumentEntry, 这里重新创建一个 ProvidedRegisterDTO 对象,即用默认值
+        ProvidedRegisterDTO providedRegisterDTOText = new ProvidedRegisterDTO();
+        // 这里假设是两个文档属于同一个患者
+        DocumentEntry docEntry = createDocumentEntry(patientID, providedRegisterDTO);
+
+        // 设置DataHandler,即文档的内容,这里是txt文档
+        DataHandler dataHandler = createDataHandler(providedRegisterDTOText);
+        Document second = new Document(docEntry, dataHandler);
+        provide.getDocuments().add(second);
+        // 设置第二个文档的hash 和 size
+        provide.getDocuments().get(1).getDocumentEntry().setHash(String.valueOf(ContentUtils.sha1(provide.getDocuments().get(1).getContent(DataHandler.class))));
+        provide.getDocuments().get(1).getDocumentEntry().setSize(Long.valueOf(String.valueOf(ContentUtils.size(provide.getDocuments().get(1).getContent(DataHandler.class)))));
+
+        // 测试第一个XML文档的值是否设置进去
+        log.error("测试第一个XML文档内容是否设置进去");
+        log.warn("Document 文档数量为: " + provide.getDocuments().size());
+        log.warn("Document 文档的UUID为: " + provide.getDocuments().get(0).getDocumentEntry().getEntryUuid());
+        log.warn("Document 文档的唯一ID为: " +provide.getDocuments().get(0).getDocumentEntry().getUniqueId());
+        log.warn("Document 文档的大小为:(size字符大小) " + provide.getDocuments().get(0).getDocumentEntry().getSize());
+        log.warn("第一个文档文档的内容为: " + IOUtils.toString(provide.getDocuments().get(0).getDataHandler().getInputStream()));
+
+        // 测试第二个Text文档的值是否设置进去
+        log.error("测试第二个Text文档内容是否设置进去");
+        log.warn("Document 文档数量为: " + provide.getDocuments().size());
+        log.warn("Document 文档的UUID为: " + provide.getDocuments().get(1).getDocumentEntry().getEntryUuid());
+        log.warn("Document 文档的唯一ID为: " +provide.getDocuments().get(1).getDocumentEntry().getUniqueId());
+        log.warn("Document 文档的大小为:(size字符大小) " + provide.getDocuments().get(1).getDocumentEntry().getSize());
+        log.warn("第二个文档文档的内容为: " + IOUtils.toString(provide.getDocuments().get(1).getDataHandler().getInputStream()));
+        return provide;
+    }
+
+
 }
