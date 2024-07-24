@@ -22,4 +22,8 @@ public class IheConstant {
 
     public static final String BASE_FILE_PATH = "/Users/bovane/Documents/hos-app/logs/";
 
+    public static final String ENTRIES = "entries";
+    public static final String DOCUMENTS = "documents";
+    public static final String INDEXES = "indexes";
+
 }
